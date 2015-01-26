@@ -1,0 +1,622 @@
+clang -g --std=c++11 -I../toolbox/include -I../include settings.cpp -o settings.test
+settings.cpp:17:7: warning: control reaches end of non-void lambda [-Wreturn-type]
+      })
+      ^
+In file included from settings.cpp:1:
+../include/lost_levels/settings.h:177:7: warning: control reaches end of non-void function [-Wreturn-type]
+      }
+      ^
+settings.cpp:15:31: note: in instantiation of function template specialization 'lost_levels::Settings::get<int>' requested here
+         assert_true(settings.get<int>("width") == 1920);
+                              ^
+2 warnings generated.
+/tmp/settings-7cfe41.o: In function `lain::str::char_to_str(char)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/string.h:117: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/string.h:118: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/string.h:120: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/string.h:120: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `std::vector<int, std::allocator<int> > lost_levels::settings_impl::get_array<int>(picojson::value&, std::string const&, std::vector<int, std::allocator<int> > const&)':
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:143: undefined reference to `__cxa_begin_catch'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:146: undefined reference to `__cxa_end_catch'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:147: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `main':
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::cout'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:10: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:19: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:19: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:19: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:19: undefined reference to `std::allocator<char>::~allocator()'
+/tmp/settings-7cfe41.o: In function `std::_Function_base::_Base_manager<main::$_0>::_M_clone(std::_Any_data&, std::_Any_data const&, std::integral_constant<bool, false>)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/functional:1878: undefined reference to `operator new(unsigned long)'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/functional:1880: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `std::_Function_base::_Base_manager<main::$_0>::_M_destroy(std::_Any_data&, std::integral_constant<bool, false>)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/functional:1894: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `operator()':
+/home/lainproliant/proj/lost_levels/test/settings.cpp:13: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:13: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:13: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:13: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:15: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:16: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/settings.cpp:17: undefined reference to `std::allocator<char>::~allocator()'
+/tmp/settings-7cfe41.o: In function `std::_Function_base::_Base_manager<main::$_0>::_M_init_functor(std::_Any_data&, main::$_0&&, std::integral_constant<bool, false>)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/functional:1955: undefined reference to `operator new(unsigned long)'
+/tmp/settings-7cfe41.o: In function `__cxx_global_var_init':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/iostream:74: undefined reference to `std::ios_base::Init::Init()'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/iostream:74: undefined reference to `std::ios_base::Init::~Init()'
+/tmp/settings-7cfe41.o: In function `__cxx_global_var_init2':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:941: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:941: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `GCC_except_table30':
+settings.cpp:(.gcc_except_table+0x560): undefined reference to `typeinfo for std::exception'
+/tmp/settings-7cfe41.o: In function `double lost_levels::settings_impl::get_value<double>(picojson::value const&, std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:34: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:34: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:45: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:45: undefined reference to `__cxa_free_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:40: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:40: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:45: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:45: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `double lost_levels::settings_impl::get_value<double>(picojson::value&, std::string const&, double const&)':
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:52: undefined reference to `__cxa_begin_catch'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:53: undefined reference to `std::cerr'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:53: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <char, std::char_traits<char>, std::allocator<char> >(std::basic_ostream<char, std::char_traits<char> >&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:53: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:53: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:54: undefined reference to `std::cerr'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:58: undefined reference to `__cxa_end_catch'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:59: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `std::vector<double, std::allocator<double> > lost_levels::settings_impl::get_array<double>(picojson::value const&, std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:78: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:78: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:98: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:98: undefined reference to `__cxa_free_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:84: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:84: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:98: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:98: undefined reference to `__cxa_free_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:90: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:90: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:98: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:98: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `__clang_call_terminate':
+settings.cpp:(.text.__clang_call_terminate[__clang_call_terminate]+0x9): undefined reference to `__cxa_begin_catch'
+settings.cpp:(.text.__clang_call_terminate[__clang_call_terminate]+0x12): undefined reference to `std::terminate()'
+/tmp/settings-7cfe41.o: In function `TestSuite':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:58: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/tmp/settings-7cfe41.o: In function `lain::testing::TestSuite::run(std::ostream&) const':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:78: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:78: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <char, std::char_traits<char>, std::allocator<char> >(std::basic_ostream<char, std::char_traits<char> >&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:78: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:78: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:78: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:82: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:82: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <char, std::char_traits<char>, std::allocator<char> >(std::basic_ostream<char, std::char_traits<char> >&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:82: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:82: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:82: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:82: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:87: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:87: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:87: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:110: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:94: undefined reference to `__cxa_begin_catch'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:95: undefined reference to `std::current_exception()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:98: undefined reference to `std::__exception_ptr::exception_ptr::exception_ptr(std::__exception_ptr::exception_ptr const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:98: undefined reference to `std::rethrow_exception(std::__exception_ptr::exception_ptr)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:90: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:90: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:90: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:110: undefined reference to `std::__exception_ptr::exception_ptr::~exception_ptr()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:99: undefined reference to `__cxa_begin_catch'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:100: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:100: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:100: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:100: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:100: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:100: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:101: undefined reference to `__cxa_end_catch'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:104: undefined reference to `std::__exception_ptr::exception_ptr::~exception_ptr()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:104: undefined reference to `__cxa_end_catch'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:110: undefined reference to `__cxa_end_catch'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:110: undefined reference to `std::__exception_ptr::exception_ptr::~exception_ptr()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:110: undefined reference to `__cxa_end_catch'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:110: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:107: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/tmp/settings-7cfe41.o: In function `~TestSuite':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:59: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o:(.rodata+0x30): undefined reference to `vtable for __cxxabiv1::__class_type_info'
+/tmp/settings-7cfe41.o: In function `lost_levels::Settings::load_from_file(std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:155: undefined reference to `std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:157: undefined reference to `std::basic_ifstream<char, std::char_traits<char> >::open(std::string const&, std::_Ios_Openmode)'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:161: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:161: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:161: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:161: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:166: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:166: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:166: undefined reference to `__cxa_free_exception'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:166: undefined reference to `std::basic_ifstream<char, std::char_traits<char> >::~basic_ifstream()'
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:166: undefined reference to `std::basic_ifstream<char, std::char_traits<char> >::~basic_ifstream()'
+/tmp/settings-7cfe41.o: In function `lain::testing::assert_true(bool, std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:130: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:130: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:132: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `~Settings':
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:152: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `~Exception':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:13: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:13: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:13: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `lain::Exception::what() const':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:20: undefined reference to `std::string::c_str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:20: undefined reference to `__cxa_call_unexpected'
+/tmp/settings-7cfe41.o: In function `~AssertionFailed':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:31: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `Exception':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::string::c_str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/exception.h:16: undefined reference to `std::runtime_error::~runtime_error()'
+/tmp/settings-7cfe41.o: In function `~TestException':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:25: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `operator>>(std::istream&, picojson::value&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:984: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:984: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:986: undefined reference to `std::string::empty() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:988: undefined reference to `std::basic_ios<char, std::char_traits<char> >::setstate(std::_Ios_Iostate)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:991: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:991: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:991: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `~SettingsException':
+/home/lainproliant/proj/lost_levels/test/../include/lost_levels/settings.h:20: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `picojson::set_last_error(std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:944: undefined reference to `std::string::operator=(std::string const&)'
+/tmp/settings-7cfe41.o: In function `picojson::parse(picojson::value&, std::istream&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:932: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:933: undefined reference to `std::basic_ios<char, std::char_traits<char> >::rdbuf() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:936: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:936: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `std::istreambuf_iterator<char, std::char_traits<char> > picojson::_parse<picojson::default_parse_context, std::istreambuf_iterator<char, std::char_traits<char> > >(picojson::default_parse_context&, std::istreambuf_iterator<char, std::char_traits<char> > const&, std::istreambuf_iterator<char, std::char_traits<char> > const&, std::string*)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:913: undefined reference to `std::string::operator=(char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:919: undefined reference to `std::string::push_back(char)'
+/tmp/settings-7cfe41.o: In function `bool picojson::_parse<picojson::default_parse_context, std::istreambuf_iterator<char, std::char_traits<char> > >(picojson::default_parse_context&, picojson::input<std::istreambuf_iterator<char, std::char_traits<char> > >&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:753: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:753: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:753: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:753: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:796: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:796: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:754: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:754: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:754: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:754: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:796: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:796: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:755: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:755: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:755: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:755: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:796: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:796: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:769: undefined reference to `std::string::empty() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:785: undefined reference to `std::string::c_str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:786: undefined reference to `std::string::c_str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:786: undefined reference to `std::string::size() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:796: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:791: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `std::istreambuf_iterator<char, std::char_traits<char> >::operator++()':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/streambuf_iterator.h:144: undefined reference to `std::basic_streambuf<char, std::char_traits<char> >::sbumpc()'
+/tmp/settings-7cfe41.o: In function `std::istreambuf_iterator<char, std::char_traits<char> >::_M_get() const':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/streambuf_iterator.h:185: undefined reference to `std::basic_streambuf<char, std::char_traits<char> >::sgetc()'
+/tmp/settings-7cfe41.o: In function `picojson::input<std::istreambuf_iterator<char, std::char_traits<char> > >::match(std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:572: undefined reference to `std::string::begin() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:573: undefined reference to `std::string::end() const'
+/tmp/settings-7cfe41.o: In function `bool picojson::_parse_object<picojson::default_parse_context, std::istreambuf_iterator<char, std::char_traits<char> > >(picojson::default_parse_context&, picojson::input<std::istreambuf_iterator<char, std::char_traits<char> > >&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:709: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:720: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:718: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `picojson::input<std::istreambuf_iterator<char, std::char_traits<char> > >::ungetc()':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:548: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:548: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:548: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:548: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:548: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:548: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:548: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:551: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:551: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:551: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `std::string picojson::_parse_number<std::istreambuf_iterator<char, std::char_traits<char> > >(picojson::input<std::istreambuf_iterator<char, std::char_traits<char> > >&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:723: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:728: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:741: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:731: undefined reference to `std::string::operator+=(char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:741: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `value':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:203: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:203: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:203: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:203: undefined reference to `std::overflow_error::overflow_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:203: undefined reference to `typeinfo for std::overflow_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:203: undefined reference to `std::overflow_error::~overflow_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:203: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:206: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:206: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:206: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `~value':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:231: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:231: undefined reference to `operator delete(void*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:232: undefined reference to `operator delete(void*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:233: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<std::_Rb_tree_node<std::pair<std::string const, picojson::value> > >::deallocate(std::_Rb_tree_node<std::pair<std::string const, picojson::value> >*, unsigned long)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:110: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `~pair':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_pair.h:96: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<picojson::value>::deallocate(picojson::value*, unsigned long)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:110: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `std::isinf(double)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/cmath:605: undefined reference to `fabs'
+/tmp/settings-7cfe41.o: In function `value':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:242: undefined reference to `operator new(unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:242: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:250: undefined reference to `operator delete(void*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:243: undefined reference to `operator new(unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:250: undefined reference to `operator delete(void*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:244: undefined reference to `operator new(unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:250: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `std::_Rb_tree<std::string, std::pair<std::string const, picojson::value>, std::_Select1st<std::pair<std::string const, picojson::value> >, std::less<std::string>, std::allocator<std::pair<std::string const, picojson::value> > >::_M_copy(std::_Rb_tree_node<std::pair<std::string const, picojson::value> > const*, std::_Rb_tree_node<std::pair<std::string const, picojson::value> >*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:1227: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:1231: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:1234: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `std::_Rb_tree_node<std::pair<std::string const, picojson::value> >* std::_Rb_tree<std::string, std::pair<std::string const, picojson::value>, std::_Select1st<std::pair<std::string const, picojson::value> >, std::less<std::string>, std::allocator<std::pair<std::string const, picojson::value> > >::_M_create_node<std::pair<std::string const, picojson::value> const&>(std::pair<std::string const, picojson::value> const&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:424: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:428: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:431: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `pair':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_pair.h:127: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_pair.h:127: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<std::_Rb_tree_node<std::pair<std::string const, picojson::value> > >::allocate(unsigned long, void const*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:102: undefined reference to `std::__throw_bad_alloc()'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:104: undefined reference to `operator new(unsigned long)'
+/tmp/settings-7cfe41.o: In function `picojson::value* std::__uninitialized_copy<false>::__uninit_copy<__gnu_cxx::__normal_iterator<picojson::value const*, std::vector<picojson::value, std::allocator<picojson::value> > >, picojson::value*>(__gnu_cxx::__normal_iterator<picojson::value const*, std::vector<picojson::value, std::allocator<picojson::value> > >, __gnu_cxx::__normal_iterator<picojson::value const*, std::vector<picojson::value, std::allocator<picojson::value> > >, picojson::value*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:77: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:81: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:83: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<picojson::value>::allocate(unsigned long, void const*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:102: undefined reference to `std::__throw_bad_alloc()'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:104: undefined reference to `operator new(unsigned long)'
+/tmp/settings-7cfe41.o: In function `bool picojson::_parse_string<std::string, std::istreambuf_iterator<char, std::char_traits<char> > >(std::string&, picojson::input<std::istreambuf_iterator<char, std::char_traits<char> > >&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:660: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:661: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:662: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:663: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:664: undefined reference to `std::string::push_back(char)'
+/tmp/settings-7cfe41.o:/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:665: more undefined references to `std::string::push_back(char)' follow
+/tmp/settings-7cfe41.o: In function `std::map<std::string, picojson::value, std::less<std::string>, std::allocator<std::pair<std::string const, picojson::value> > >& picojson::value::get<std::map<std::string, picojson::value, std::less<std::string>, std::allocator<std::pair<std::string const, picojson::value> > > >()':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:300: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `std::_Rb_tree_iterator<std::pair<std::string const, picojson::value> > std::_Rb_tree<std::string, std::pair<std::string const, picojson::value>, std::_Select1st<std::pair<std::string const, picojson::value> >, std::less<std::string>, std::allocator<std::pair<std::string const, picojson::value> > >::_M_emplace_hint_unique<std::piecewise_construct_t const&, std::tuple<std::string const&>, std::tuple<> >(std::_Rb_tree_const_iterator<std::pair<std::string const, picojson::value> >, std::piecewise_construct_t const&, std::tuple<std::string const&>&&, std::tuple<>&&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:1801: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:1805: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:1807: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `std::_Rb_tree_node<std::pair<std::string const, picojson::value> >* std::_Rb_tree<std::string, std::pair<std::string const, picojson::value>, std::_Select1st<std::pair<std::string const, picojson::value> >, std::less<std::string>, std::allocator<std::pair<std::string const, picojson::value> > >::_M_create_node<std::piecewise_construct_t const&, std::tuple<std::string const&>, std::tuple<> >(std::piecewise_construct_t const&, std::tuple<std::string const&>&&, std::tuple<>&&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:424: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:428: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:431: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `std::_Rb_tree<std::string, std::pair<std::string const, picojson::value>, std::_Select1st<std::pair<std::string const, picojson::value> >, std::less<std::string>, std::allocator<std::pair<std::string const, picojson::value> > >::_M_insert_node(std::_Rb_tree_node_base*, std::_Rb_tree_node_base*, std::_Rb_tree_node<std::pair<std::string const, picojson::value> >*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:1696: undefined reference to `std::_Rb_tree_insert_and_rebalance(bool, std::_Rb_tree_node_base*, std::_Rb_tree_node_base*, std::_Rb_tree_node_base&)'
+/tmp/settings-7cfe41.o: In function `std::_Rb_tree_iterator<std::pair<std::string const, picojson::value> >::operator--()':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:218: undefined reference to `std::_Rb_tree_decrement(std::_Rb_tree_node_base*)'
+/tmp/settings-7cfe41.o: In function `std::_Rb_tree_iterator<std::pair<std::string const, picojson::value> >::operator++()':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_tree.h:203: undefined reference to `std::_Rb_tree_increment(std::_Rb_tree_node_base*)'
+/tmp/settings-7cfe41.o: In function `pair<const std::basic_string<char> &, 0>':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/tuple:1105: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/tuple:1105: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/tmp/settings-7cfe41.o: In function `bool std::operator< <char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/basic_string.h:2590: undefined reference to `std::string::compare(std::string const&) const'
+/tmp/settings-7cfe41.o: In function `bool picojson::_parse_codepoint<std::string, std::istreambuf_iterator<char, std::char_traits<char> > >(std::string&, picojson::input<std::istreambuf_iterator<char, std::char_traits<char> > >&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:628: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:631: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:634: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:636: undefined reference to `std::string::push_back(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:637: undefined reference to `std::string::push_back(char)'
+/tmp/settings-7cfe41.o:/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:639: more undefined references to `std::string::push_back(char)' follow
+/tmp/settings-7cfe41.o: In function `value':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:175: undefined reference to `operator new(unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:175: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:181: undefined reference to `operator delete(void*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:176: undefined reference to `operator new(unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:177: undefined reference to `operator new(unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:181: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `std::vector<picojson::value, std::allocator<picojson::value> >& picojson::value::get<std::vector<picojson::value, std::allocator<picojson::value> > >()':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `void std::vector<picojson::value, std::allocator<picojson::value> >::_M_emplace_back_aux<picojson::value>(picojson::value&&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:426: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:444: undefined reference to `__cxa_end_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:434: undefined reference to `__cxa_rethrow'
+/tmp/settings-7cfe41.o: In function `std::vector<picojson::value, std::allocator<picojson::value> >::_M_check_len(unsigned long, char const*) const':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_vector.h:1425: undefined reference to `std::__throw_length_error(char const*)'
+/tmp/settings-7cfe41.o: In function `picojson::value* std::__uninitialized_copy<false>::__uninit_copy<picojson::value*, picojson::value*>(picojson::value*, picojson::value*, picojson::value*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:77: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:81: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:83: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `std::string& picojson::value::get<std::string>()':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:298: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `__shared_count<picojson::value, std::allocator<picojson::value>>':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/shared_ptr_base.h:622: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/shared_ptr_base.h:626: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/shared_ptr_base.h:628: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<std::_Sp_counted_ptr_inplace<picojson::value, std::allocator<picojson::value>, (__gnu_cxx::_Lock_policy)2> >::deallocate(std::_Sp_counted_ptr_inplace<picojson::value, std::allocator<picojson::value>, (__gnu_cxx::_Lock_policy)2>*, unsigned long)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:110: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `~_Sp_counted_ptr_inplace':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/shared_ptr_base.h:519: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `~_Sp_counted_base':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/shared_ptr_base.h:116: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<std::_Sp_counted_ptr_inplace<picojson::value, std::allocator<picojson::value>, (__gnu_cxx::_Lock_policy)2> >::allocate(unsigned long, void const*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:102: undefined reference to `std::__throw_bad_alloc()'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:104: undefined reference to `operator new(unsigned long)'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<int>::deallocate(int*, unsigned long)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:110: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `int* std::__uninitialized_copy<false>::__uninit_copy<__gnu_cxx::__normal_iterator<int const*, std::vector<int, std::allocator<int> > >, int*>(__gnu_cxx::__normal_iterator<int const*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int const*, std::vector<int, std::allocator<int> > >, int*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:77: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:81: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:83: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<int>::allocate(unsigned long, void const*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:102: undefined reference to `std::__throw_bad_alloc()'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:104: undefined reference to `operator new(unsigned long)'
+/tmp/settings-7cfe41.o: In function `void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:426: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:444: undefined reference to `__cxa_end_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:434: undefined reference to `__cxa_rethrow'
+/tmp/settings-7cfe41.o: In function `std::vector<int, std::allocator<int> >::_M_check_len(unsigned long, char const*) const':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_vector.h:1425: undefined reference to `std::__throw_length_error(char const*)'
+/tmp/settings-7cfe41.o: In function `int* std::__uninitialized_copy<false>::__uninit_copy<std::move_iterator<int*>, int*>(std::move_iterator<int*>, std::move_iterator<int*>, int*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:77: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:81: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:83: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `picojson::value::contains(std::string const&) const':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:356: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:356: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:356: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:356: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:356: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:356: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:356: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:359: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:359: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:359: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `std::string tinyformat::format<std::string>(char const*, std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:941: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::basic_ostringstream(std::_Ios_Openmode)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:943: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:944: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:944: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/tmp/settings-7cfe41.o: In function `picojson::value::get(std::string const&) const':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:337: undefined reference to `__cxa_guard_acquire'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:337: undefined reference to `__cxa_guard_release'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:338: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:338: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:338: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:338: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:338: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:338: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:338: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:341: undefined reference to `__cxa_guard_abort'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:341: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:341: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:341: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `std::vector<picojson::value, std::allocator<picojson::value> > const& picojson::value::get<std::vector<picojson::value, std::allocator<picojson::value> > >() const':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:299: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `double& picojson::value::get<double>()':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `__cxa_allocate_exception'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `std::allocator<char>::allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `std::runtime_error::runtime_error(std::string const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `typeinfo for std::runtime_error'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `std::runtime_error::~runtime_error()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `__cxa_throw'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `std::allocator<char>::~allocator()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:305: undefined reference to `__cxa_free_exception'
+/tmp/settings-7cfe41.o: In function `void std::vector<double, std::allocator<double> >::_M_emplace_back_aux<double const&>(double const&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:426: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:444: undefined reference to `__cxa_end_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:434: undefined reference to `__cxa_rethrow'
+/tmp/settings-7cfe41.o: In function `std::vector<double, std::allocator<double> >::_M_check_len(unsigned long, char const*) const':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_vector.h:1425: undefined reference to `std::__throw_length_error(char const*)'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<double>::deallocate(double*, unsigned long)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:110: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `double* std::__uninitialized_copy<false>::__uninit_copy<std::move_iterator<double*>, double*>(std::move_iterator<double*>, std::move_iterator<double*>, double*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:77: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:81: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:83: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<double>::allocate(unsigned long, void const*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:102: undefined reference to `std::__throw_bad_alloc()'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:104: undefined reference to `operator new(unsigned long)'
+/tmp/settings-7cfe41.o: In function `void tinyformat::formatValue<std::string>(std::ostream&, char const*, char const*, int, std::string const&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:327: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <char, std::char_traits<char>, std::allocator<char> >(std::basic_ostream<char, std::char_traits<char> >&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/tmp/settings-7cfe41.o: In function `void tinyformat::detail::formatTruncated<std::string>(std::ostream&, std::string const&, int)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:258: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::basic_ostringstream(std::_Ios_Openmode)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:259: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <char, std::char_traits<char>, std::allocator<char> >(std::basic_ostream<char, std::char_traits<char> >&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:260: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:261: undefined reference to `std::string::c_str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:261: undefined reference to `std::string::size() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:261: undefined reference to `std::ostream::write(char const*, long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/tmp/settings-7cfe41.o: In function `tinyformat::detail::formatImpl(std::ostream&, char const*, tinyformat::detail::FormatArg const*, int)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:760: undefined reference to `std::basic_ios<char, std::char_traits<char> >::fill() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:786: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::basic_ostringstream(std::_Ios_Openmode)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:787: undefined reference to `std::basic_ios<char, std::char_traits<char> >::copyfmt(std::basic_ios<char, std::char_traits<char> > const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:790: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:791: undefined reference to `std::string::size() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:792: undefined reference to `std::string::operator[](unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:792: undefined reference to `std::string::operator[](unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:808: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:793: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <char, std::char_traits<char>, std::allocator<char> >(std::basic_ostream<char, std::char_traits<char> >&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:794: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:794: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:808: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:807: undefined reference to `std::basic_ios<char, std::char_traits<char> >::fill(char)'
+/tmp/settings-7cfe41.o: In function `tinyformat::detail::printFormatStringLiteral(std::ostream&, char const*)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:545: undefined reference to `std::ostream::write(char const*, long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:548: undefined reference to `std::ostream::write(char const*, long)'
+/tmp/settings-7cfe41.o: In function `tinyformat::detail::streamStateFromFormat(std::ostream&, bool&, int&, char const*, tinyformat::detail::FormatArg const*, int&, int)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:582: undefined reference to `std::basic_ios<char, std::char_traits<char> >::fill(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:605: undefined reference to `std::basic_ios<char, std::char_traits<char> >::fill(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:610: undefined reference to `std::basic_ios<char, std::char_traits<char> >::fill(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:643: undefined reference to `std::basic_ios<char, std::char_traits<char> >::fill(char)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:745: undefined reference to `std::basic_ios<char, std::char_traits<char> >::fill(char)'
+/tmp/settings-7cfe41.o: In function `value':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:213: undefined reference to `operator new(unsigned long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/picojson/picojson.h:214: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `void std::vector<double, std::allocator<double> >::_M_emplace_back_aux<double>(double&&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:426: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:444: undefined reference to `__cxa_end_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:434: undefined reference to `__cxa_rethrow'
+/tmp/settings-7cfe41.o: In function `void tinyformat::formatValue<double>(std::ostream&, char const*, char const*, int, double const&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:327: undefined reference to `std::ostream::operator<<(double)'
+/tmp/settings-7cfe41.o: In function `tinyformat::detail::formatValueAsType<double, char, true>::invoke(std::ostream&, double const&)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:211: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char)'
+/tmp/settings-7cfe41.o: In function `void tinyformat::detail::formatTruncated<double>(std::ostream&, double const&, int)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:258: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::basic_ostringstream(std::_Ios_Openmode)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:259: undefined reference to `std::ostream::operator<<(double)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:260: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:261: undefined reference to `std::string::c_str() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:261: undefined reference to `std::string::size() const'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:261: undefined reference to `std::ostream::write(char const*, long)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/tinyformat/tinyformat.h:262: undefined reference to `std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()'
+/tmp/settings-7cfe41.o: In function `~TestSuite':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:59: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<lain::testing::UnitTest>::deallocate(lain::testing::UnitTest*, unsigned long)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:110: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `lain::testing::UnitTest::get_name() const':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:48: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/tmp/settings-7cfe41.o: In function `std::function<bool ()>::operator()() const':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/functional:2438: undefined reference to `std::__throw_bad_function_call()'
+/tmp/settings-7cfe41.o: In function `UnitTest':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:40: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/tmp/settings-7cfe41.o: In function `~UnitTest':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:41: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:41: undefined reference to `operator delete(void*)'
+/tmp/settings-7cfe41.o: In function `void std::vector<lain::testing::UnitTest, std::allocator<lain::testing::UnitTest> >::_M_emplace_back_aux<lain::testing::UnitTest const&>(lain::testing::UnitTest const&)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:426: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:444: undefined reference to `__cxa_end_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/vector.tcc:434: undefined reference to `__cxa_rethrow'
+/tmp/settings-7cfe41.o: In function `std::vector<lain::testing::UnitTest, std::allocator<lain::testing::UnitTest> >::_M_check_len(unsigned long, char const*) const':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_vector.h:1425: undefined reference to `std::__throw_length_error(char const*)'
+/tmp/settings-7cfe41.o: In function `lain::testing::UnitTest* std::__uninitialized_copy<false>::__uninit_copy<lain::testing::UnitTest*, lain::testing::UnitTest*>(lain::testing::UnitTest*, lain::testing::UnitTest*, lain::testing::UnitTest*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:77: undefined reference to `__cxa_begin_catch'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:81: undefined reference to `__cxa_rethrow'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/bits/stl_uninitialized.h:83: undefined reference to `__cxa_end_catch'
+/tmp/settings-7cfe41.o: In function `UnitTest':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:37: undefined reference to `std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)'
+/tmp/settings-7cfe41.o: In function `__gnu_cxx::new_allocator<lain::testing::UnitTest>::allocate(unsigned long, void const*)':
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:102: undefined reference to `std::__throw_bad_alloc()'
+/usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/ext/new_allocator.h:104: undefined reference to `operator new(unsigned long)'
+/tmp/settings-7cfe41.o: In function `lain::testing::TestSuite::signal_callback(int)':
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:117: undefined reference to `std::cerr'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:117: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::ostream::operator<<(int)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)'
+/home/lainproliant/proj/lost_levels/test/../toolbox/include/lain/testing.h:118: undefined reference to `std::ostream::operator<<(std::ostream& (*)(std::ostream&))'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN4lain9ExceptionE[_ZTIN4lain9ExceptionE]+0x0): undefined reference to `vtable for __cxxabiv1::__si_class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN4lain9ExceptionE[_ZTIN4lain9ExceptionE]+0x10): undefined reference to `typeinfo for std::runtime_error'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN11lost_levels17SettingsExceptionE[_ZTIN11lost_levels17SettingsExceptionE]+0x0): undefined reference to `vtable for __cxxabiv1::__si_class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN11lost_levels8SettingsE[_ZTIN11lost_levels8SettingsE]+0x0): undefined reference to `vtable for __cxxabiv1::__class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN4lain7testing13TestExceptionE[_ZTIN4lain7testing13TestExceptionE]+0x0): undefined reference to `vtable for __cxxabiv1::__si_class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN4lain7testing15AssertionFailedE[_ZTIN4lain7testing15AssertionFailedE]+0x0): undefined reference to `vtable for __cxxabiv1::__si_class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTISt19_Sp_make_shared_tag[_ZTISt19_Sp_make_shared_tag]+0x0): undefined reference to `vtable for __cxxabiv1::__class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTISt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE2EE[_ZTISt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE2EE]+0x0): undefined reference to `vtable for __cxxabiv1::__class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTISt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE[_ZTISt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE]+0x0): undefined reference to `vtable for __cxxabiv1::__si_class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTISt23_Sp_counted_ptr_inplaceIN8picojson5valueESaIS1_ELN9__gnu_cxx12_Lock_policyE2EE[_ZTISt23_Sp_counted_ptr_inplaceIN8picojson5valueESaIS1_ELN9__gnu_cxx12_Lock_policyE2EE]+0x0): undefined reference to `vtable for __cxxabiv1::__si_class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTVSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE[_ZTVSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE]+0x20): undefined reference to `__cxa_pure_virtual'
+/tmp/settings-7cfe41.o:(.rodata._ZTVSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE[_ZTVSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE]+0x30): undefined reference to `__cxa_pure_virtual'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN4lain7testing9TestSuiteE[_ZTIN4lain7testing9TestSuiteE]+0x0): undefined reference to `vtable for __cxxabiv1::__class_type_info'
+/tmp/settings-7cfe41.o:(.rodata._ZTIN4lain7testing8UnitTestE[_ZTIN4lain7testing8UnitTestE]+0x0): undefined reference to `vtable for __cxxabiv1::__class_type_info'
+/tmp/settings-7cfe41.o:(.eh_frame+0x47): undefined reference to `__gxx_personality_v0'
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+Makefile:14: recipe for target 'settings.test' failed
+make: *** [settings.test] Error 1
