@@ -1,0 +1,9 @@
+{
+   "images": [
+      {"name": "question-block", "file": "question-block.png"}
+   ],
+   "animations": [
+      {"name": "question-block", "image": "question-block",
+       "frames": [15, 15, 15, 15], "looping": true, "width": 16, "height": 16}
+   ]
+}

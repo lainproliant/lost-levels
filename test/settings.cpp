@@ -6,7 +6,7 @@ using namespace lain;
 using namespace lain::testing;
 using namespace lost_levels;
 
-int main(int argc, char** argv) {
+int main() {
    return TestSuite("lost_levels settings tests")
       .die_on_signal(SIGSEGV)
       .test("Settings-001: Loading settings from a file", [&]()->bool {
@@ -21,9 +21,11 @@ int main(int argc, char** argv) {
          Settings graphics_settings = settings.get_section("graphics");
          int width = graphics_settings.get<int>("width", 1920);
          int height = graphics_settings.get<int>("height", 1080);
+         bool fullscreen = graphics_settings.get<bool>("fullscreen", false);
 
          assert_true(width == 1920);
          assert_true(height == 1080);
+         assert_true(fullscreen == false);
          assert_true(graphics_settings.get<int>("width") == 1920);
          assert_true(graphics_settings.get<int>("height") == 1080);
 
@@ -31,6 +33,7 @@ int main(int argc, char** argv) {
          graphics_settings = settings.get_section("graphics");
          assert_true(graphics_settings.get<int>("width") == 1920);
          assert_true(graphics_settings.get<int>("height") == 1080);
+         assert_true(graphics_settings.get<bool>("fullscreen") == false);
 
          return true;
       })

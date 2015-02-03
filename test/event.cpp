@@ -23,7 +23,7 @@ private:
 
 const EventType CustomEvent::TYPE = declareEvent("customEvent");
 
-int main(int argc, char** argv) {
+int main() {
    return TestSuite("lost_levels event tests")
       .die_on_signal(SIGSEGV)
       .test("Event-001: Basic EventBus test", [&]()->bool {

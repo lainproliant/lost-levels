@@ -26,6 +26,51 @@ namespace lost_levels {
 
       virtual ~Timer() { }
 
+      T get_frames() const {
+         return frames;
+      }
+
+      T get_time() const {
+         return t1;
+      }
+
+      T get_wait_time() const {
+         T tnow = getTime();
+
+         if (tnow < t0 || tnow >= t0 + interval) {
+            return 0;
+
+         } else {
+            return t0 + interval - tnow;
+         }
+      }
+
+      shared_ptr<Timer<T>> relative_timer(T frameInterval = 0,
+            bool accumulate = false) const {
+         return make_shared<RelativeTimer<T>>(
+            this->shared_from_this(), frameInterval, accumulate);
+      }
+
+      virtual shared_ptr<Timer<T>> copy() const {
+         return shared_ptr<Timer<T>>(new Timer(*this));
+      }
+
+      void pause() {
+         paused = true;
+      }
+
+      void reset() {
+         t0 = getTime();
+         t1 = t0;
+         t2 = t0 + interval;
+         frames = 0;
+      }
+
+      void set_interval(const T& newInterval) {
+         interval = newInterval;
+         reset();
+      }
+
       void start() {
          T tnow = getTime();
          T tdiff = t1 - t0;
@@ -34,10 +79,6 @@ namespace lost_levels {
          t1 = tnow + tdiff;
          t2 = t0 + interval;
          paused = false;
-      }
-
-      void pause() {
-         paused = true;
       }
 
       bool update(T* pterr = nullptr) {
@@ -95,36 +136,6 @@ namespace lost_levels {
          }
       }
 
-      void reset() {
-         t0 = getTime();
-         t1 = t0;
-         t2 = t0 + interval;
-         frames = 0;
-      }
-
-      T get_frames() const {
-         return frames;
-      }
-
-      T get_time() const {
-         return t1;
-      }
-
-      T get_wait_time() const {
-         T tnow = getTime();
-
-         if (tnow < t0 || tnow >= t0 + interval) {
-            return 0;
-
-         } else {
-            return t0 + interval - tnow;
-         }
-      }
-
-      Timer<T> relative_timer(T frameInterval) const {
-         return RelativeTimer<T>(this->shared_from_this());
-      }
-
    protected:
       Timer(TimeFunction getTime, T interval, bool accumulate = false) :
          getTime(getTime), interval(interval), accumulate(accumulate) {
@@ -143,12 +154,16 @@ namespace lost_levels {
 
    template<class T>
    class RelativeTimer : public Timer<T> {
-   private:
-      RelativeTimer(shared_ptr<Timer<T>> referenceTimer, T interval) :
+   public:
+      RelativeTimer(const shared_ptr<const Timer<T>>& referenceTimer, T interval, bool accumulate = false) :
          Timer<T>([referenceTimer]() -> T {
                      return referenceTimer->get_frames();
-                  }, interval) { }
+                  }, interval, accumulate) { }
       virtual ~RelativeTimer() { }
+
+      shared_ptr<Timer<T>> copy() const override {
+         return shared_ptr<Timer<T>>(new RelativeTimer(*this));
+      }
    };
 
    inline shared_ptr<Timer<Uint32>> create_sdl_timer(Uint32 interval, bool accumulate = false) {

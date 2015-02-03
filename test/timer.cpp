@@ -6,7 +6,7 @@ using namespace lain;
 using namespace lain::testing;
 using namespace lost_levels;
 
-double run_timer_sim(int fps, const int frames) {
+double run_timer_sim(int fps, const unsigned int frames) {
    shared_ptr<Timer<Uint32>> timer = create_sdl_timer(1000 / fps);
    timer->start();
 
@@ -31,8 +31,7 @@ double run_timer_sim(int fps, const int frames) {
    return totalErrorTime;
 }
 
-
-int main(int argc, char** argv) {
+int main() {
    srand(time(0));
 
    return TestSuite("lost_levels timer tests")
@@ -65,7 +64,6 @@ int main(int argc, char** argv) {
 
          while (SDL_GetTicks() - startTime < (1000 * SECONDS)) {
             Uint32 terr;
-            int physics_frames = 0;
 
             if (graphics_timer->update(&terr)) {
                Uint32 renderStart = SDL_GetTicks();

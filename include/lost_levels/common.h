@@ -11,6 +11,7 @@
  */
 #pragma once
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -20,11 +21,14 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <cfloat>
+#include <cmath>
 
 #include <SDL2/SDL.h>
 
 #include "lain/exception.h"
 #include "lain/string.h"
+#include "lain/getopt.h"
 #include "tinyformat/tinyformat.h"
 #include "picojson/picojson.h"
 

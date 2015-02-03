@@ -1,9 +1,9 @@
 CXX=g++
 CXXFLAGS=-g --std=c++11 -I../toolbox/include -I../include
-LDFLAGS=-lSDL2
+LDFLAGS=-lSDL2 -lSDL2_image
 LDLIBS=
 
-all: unit-test clean
+all: unit-test
 
 unit-test: build-all-tests
 	./run-tests.py

@@ -45,6 +45,19 @@ namespace lost_levels {
       }
 
       template <class T>
+      T get_value_or_default(const pj::value& obj_value,
+                             const string& name,
+                             const T& default_value) {
+         try {
+            return get_value<T>(obj_value, name);
+
+         } catch (const SettingsException& e) {
+            return default_value;
+         }
+      }
+
+
+      template <class T>
       T get_value(pj::value& obj_value, const string& name, const T& default_value) {
          try {
             return get_value<T>(obj_value, name);
@@ -147,6 +160,9 @@ namespace lost_levels {
    class Settings {
    public:
       Settings() : obj_value(make_shared<pj::value>(pj::object())) { }
+      Settings(const shared_ptr<pj::value>& obj_value) :
+         obj_value(obj_value) { }
+
       virtual ~Settings() { }
 
       static Settings load_from_file(const string& filename) {
@@ -166,7 +182,19 @@ namespace lost_levels {
       void save_to_file(const string& filename, bool prettify = false) const {
          ofstream outfile;
          outfile.open(filename);
-         outfile << obj_value->serialize(prettify);
+         print(outfile, prettify);
+      }
+
+      void print(ostream& outfile, bool prettify = false) const {
+         outfile << to_string(prettify);
+      }
+
+      string to_string(bool prettify = false) const {
+         return obj_value->serialize(prettify);
+      }
+
+      bool contains(const string& name) const {
+         return obj_value->contains(name);
       }
 
       template <class T>
@@ -177,6 +205,11 @@ namespace lost_levels {
       template <class T>
       T get(const string& name, const T& default_value) {
          return settings_impl::get_value<T>(*obj_value, name, default_value);
+      }
+
+      template <class T>
+      T get_default(const string& name, const T& default_value) const {
+         return settings_impl::get_value_or_default(*const_pointer_cast<const pj::value>(obj_value), name, default_value);
       }
 
       template <class T>
@@ -197,6 +230,38 @@ namespace lost_levels {
       template <class T>
       void set_array(const string& name, const vector<T>& vec) {
          settings_impl::set_array<T>(*obj_value, name, vec);
+      }
+
+      vector<Settings> get_object_array(const string& name) const {
+         pj::value obj_values_array_value = obj_value->get(name);
+
+         if (! obj_values_array_value.is<pj::array>()) {
+            throw SettingsException(tfm::format("Key '%s' does not refer to an object array.", name));
+         }
+
+         pj::array& obj_values_array = obj_values_array_value.get<pj::array>();
+         vector<Settings> obj_array;
+
+         for (pj::value val : obj_values_array) {
+            if (! val.is<pj::object>()) {
+               throw SettingsException(tfm::format("Object array contains non-object: '%s'", name));
+            }
+
+            obj_array.push_back(Settings(make_shared<pj::value>(val)));
+         }
+
+         return obj_array;
+      }
+
+      void set_object_array(const string& name, const vector<Settings>& obj_list) {
+         pj::array array;
+         pj::object& obj = obj_value->get<pj::object>();
+
+         for (Settings obj : obj_list) {
+            array.push_back(*(obj.obj_value.get()));
+         }
+
+         obj[name] = pj::value(array);
       }
 
       Settings get_section(const string& name, bool must_exist = false) const {
@@ -223,9 +288,21 @@ namespace lost_levels {
       }
 
    private:
-      Settings(const shared_ptr<pj::value>& obj_value) :
-         obj_value(obj_value) { }
-
       shared_ptr<pj::value> obj_value;
    };
+
+   namespace settings_impl {
+      template <>
+      vector<Settings> get_array<Settings>(const pj::value& obj_value, const string& name) {
+         vector<pj::object> obj_array = get_array<pj::object>(obj_value, name);
+         vector<Settings> settings_vec(obj_array.size());
+
+         for (auto obj : obj_array) {
+            settings_vec.push_back(Settings(make_shared<pj::value>(obj)));
+         }
+
+         return settings_vec;
+      }
+   }
+
 }

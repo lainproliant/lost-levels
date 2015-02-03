@@ -13,13 +13,19 @@
 import glob
 import subprocess
 import sys
+import os
 
 def main(argv):
     tests_failed = 0
     modules_failed = 0
 
+    skip_tests = set((os.environ.get("SKIP_TESTS") or "").split(","))
+
+    if len(skip_tests) > 0:
+        print("Skipping tests: %s" % repr(skip_tests))
+
     tests = glob.glob("./*.test")
-    for test in tests:
+    for test in [test for test in tests if test not in skip_tests]:
         num_failed = subprocess.call(test)
         if num_failed > 0:
             modules_failed += 1

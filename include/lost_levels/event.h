@@ -93,7 +93,7 @@ namespace lost_levels {
       /**
        * Fetch or create the singleton instance.
        */
-      static EventRegistry& getInstance() {
+      static EventRegistry& get_instance() {
          static EventRegistry singleton;
          return singleton;
       }
@@ -171,6 +171,13 @@ namespace lost_levels {
       EventBus() { }
       virtual ~EventBus() { }
 
+      EventBus(const EventBus&) = delete;
+      EventBus& operator=(const EventBus&) = delete;
+
+      void publish(const string& eventName) {
+         publish(Event(EventRegistry::get_instance().get_id(eventName)));
+      }
+
       /**
        * Publish a copy of the given event to the bus.
        *
@@ -179,7 +186,7 @@ namespace lost_levels {
        * for new events as it does not require copying.
        */
       void publish(Event& event) {
-         events.push(shared_ptr<Event>(event.clone()));
+         events.push_front(shared_ptr<Event>(event.clone()));
       }
 
       /**
@@ -190,7 +197,15 @@ namespace lost_levels {
        * for new events as it does not require copying.
        */
       void publish(Event&& event) {
-         events.push(shared_ptr<Event>(event.clone()));
+         events.push_front(shared_ptr<Event>(event.clone()));
+      }
+
+      void subscribe(const string& eventName, EventFunction closure) {
+         subscribe(eventName, make_shared<FunctionalEventHandler>(closure));
+      }
+
+      void subscribe(const string& eventName, shared_ptr<EventHandler> handler) {
+         subscribe(EventRegistry::get_instance().get_id(eventName), handler);
       }
 
       /**
@@ -213,15 +228,6 @@ namespace lost_levels {
       }
 
       /**
-       * Subscribe the given EventHandler object to an event on the bus.
-       * The handle_event() method of this object will be invoked when
-       * the event is published and processed.
-       */
-      void subscribe(const EventType& eventType, EventHandler& handler) {
-         subscribe(eventType, handler.get_shared_ptr());
-      }
-
-      /**
        * Subscribe the given EventHandler object to an event on the bus,
        * using the given smart pointer.  Use this method exclusively
        * if you are already managing your EventHandler object with a
@@ -229,6 +235,15 @@ namespace lost_levels {
        */
       void subscribe(const EventType& eventType, shared_ptr<EventHandler> handler) {
          handlers.insert({eventType.get_id(), handler});
+      }
+
+      /**
+       * Channel all of the events from this bus into another.
+       */
+      void channel(EventBus& bus) {
+         for (auto event : events) {
+            bus.events.push_front(event);
+         }
       }
 
       /**
@@ -241,18 +256,18 @@ namespace lost_levels {
        */
       void process_events() {
          while (! events.empty()) {
-            shared_ptr<Event> event = events.front();
+            shared_ptr<Event> event = events.back();
             auto range = handlers.equal_range(event->get_type().get_id());
             for (auto iter = range.first; iter != range.second; iter++) {
                iter->second->handle_event(*event);
             }
 
-            events.pop();
+            events.pop_back();
          }
       }
 
    private:
-      queue<shared_ptr<Event>> events;
+      deque<shared_ptr<Event>> events;
       unordered_multimap<int, shared_ptr<EventHandler>> handlers;
    };
 
@@ -264,7 +279,7 @@ namespace lost_levels {
     * avoid runtime overhead.
     */
    inline EventType declareEvent(const string& eventName) {
-      return EventRegistry::getInstance().get_id(eventName);
+      return EventRegistry::get_instance().get_id(eventName);
    }
 }
 
