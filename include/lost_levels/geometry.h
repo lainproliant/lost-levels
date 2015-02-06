@@ -5,11 +5,14 @@
  * Date: Thursday, Jan 29 2015
  */
 #pragma once
-#include "common.h"
+
+#include <cfloat>
+#include <cmath>
+#include <iostream>
+#include <vector>
 
 namespace lost_levels {
    using namespace std;
-   using namespace lain;
 
    /**
     * Determine if the two floats provided are equal within the given
@@ -328,6 +331,13 @@ namespace lost_levels {
                 p.x <= pt.x + sz.width &&
                 p.y >= pt.y &&
                 p.y <= pt.y + sz.height;
+      }
+
+      bool contains(const Rect<T>& R2) const {
+         return (R2.pt.x >= pt.x &&
+                 R2.pt.y >= pt.y &&
+                (R2.sz.width + (R2.pt.x - pt.x) <= sz.width) &&
+                (R2.sz.height + (R2.pt.y - pt.y) <= sz.height));
       }
 
       bool intersects(const Line<T>& L) const {

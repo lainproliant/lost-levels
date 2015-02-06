@@ -6,7 +6,12 @@
  * Date: Wednesday, Jan 14 2015
  */
 #pragma once
-#include "common.h"
+#include <fstream>
+#include <memory>
+
+#include "lain/exception.h"
+#include "tinyformat/tinyformat.h"
+#include "picojson/picojson.h"
 
 namespace lost_levels {
    using namespace std;

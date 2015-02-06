@@ -5,16 +5,14 @@
  * Date: Monday, Jan 26 2015
  */
 #pragma once
-#include "common.h"
-#include "SDL2/SDL_image.h"
+#include "lain/exception.h"
 #include "lost_levels/geometry.h"
 #include "lost_levels/timer.h"
+#include "lost_levels/settings.h"
 
 namespace lost_levels {
    using namespace std;
    using namespace lain;
-
-   class Renderer;
 
    class GraphicsException : public Exception {
    public:
@@ -26,39 +24,21 @@ namespace lost_levels {
    public:
       Color() :
          r(0), g(0), b(0), a(0) { }
-      Color(Uint8 r, Uint8 g, Uint8 b) :
+      Color(uint8_t r, uint8_t g, uint8_t b) :
          r(r), g(g), b(b), a(0) { }
-      Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) :
+      Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
          r(r), g(g), b(b), a(a) { }
-
-      Uint8 r, g, b, a;
+uint8_t r, g, b, a;
    };
 
    class Image {
    public:
-      friend class Renderer;
-
-      Image(SDL_Texture* texture) :
-         texture(texture) {
-         SDL_QueryTexture(texture, nullptr, nullptr,
-            &sz.width, &sz.height);
-      }
-
       virtual ~Image() { }
-
-      const Size<int>& get_size() const {
-         return sz;
-      }
-
-   private:
-      SDL_Texture* texture;
-      Size<int> sz;
+      virtual const Size<int>& get_size() const = 0;
    };
 
    class Animation {
    public:
-      friend class Renderer;
-
       Animation(const Animation& rhs) :
          timer(rhs.timer->copy()), image(rhs.image),
          szFrame(rhs.szFrame), frames(rhs.frames),
@@ -67,7 +47,7 @@ namespace lost_levels {
       static shared_ptr<Animation> create(
          shared_ptr<const Image> image,
          const Size<int>& szFrame, const vector<int>& frames,
-         shared_ptr<const Timer<Uint32>>& timer,
+         shared_ptr<const Timer<unsigned int>>& timer,
          bool looping = false) {
 
          if (frames.size() < 1) {
@@ -145,7 +125,7 @@ namespace lost_levels {
    private:
       Animation(shared_ptr<const Image> image,
          const Size<int>& szFrame, const vector<int>& frames,
-         shared_ptr<const Timer<Uint32>> timer,
+         shared_ptr<const Timer<unsigned int>> timer,
          bool looping = true) :
 
          timer(timer->relative_timer()),
@@ -153,7 +133,7 @@ namespace lost_levels {
          frames(frames), looping(looping),
          numFrames(frames.size()) { }
 
-      shared_ptr<Timer<Uint32>> timer;
+      shared_ptr<Timer<unsigned int>> timer;
       shared_ptr<const Image> image;
       Size<int> szFrame;
       vector<int> frames;
@@ -165,179 +145,38 @@ namespace lost_levels {
 
    class Window {
    public:
-      friend class Renderer;
+      virtual ~Window() { }
 
-      class Builder {
-      public:
-         Builder() { }
-         virtual ~Builder() { }
+      virtual Size<int> get_size() const = 0;
+      virtual void set_size(const Size<int>& sz) = 0;
 
-         Builder& fullscreen() {
-            fullscr = true;
-            return *this;
-         }
-
-         Builder& with_size(const Size<int>& size) {
-            sz = size;
-            return *this;
-         }
-
-         Builder& with_title(const string& title) {
-            this->title = title;
-            return *this;
-         }
-
-         shared_ptr<Window> create() const {
-            Uint32 flags = SDL_WINDOW_SHOWN;
-
-            if (fullscr) {
-               flags |= SDL_WINDOW_FULLSCREEN;
-            }
-
-            SDL_Window* window = SDL_CreateWindow(title.c_str(),
-               SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-               sz.width, sz.height, flags);
-
-            if (window == nullptr) {
-               throw GraphicsException(tfm::format(
-                  "Failed to create window: %s", string(SDL_GetError())));
-            }
-
-            return shared_ptr<Window>(new Window(window, sz));
-         }
-
-      private:
-         string title = "Lost Levels Engine";
-         Size<int> sz = Size<int>(1280, 800);
-         bool fullscr = false;
-      };
-
-      virtual ~Window() {
-         SDL_DestroyWindow(window);
-      }
-
-      const Size<int>& get_size() const {
-         return sz;
-      }
-
-   private:
-      Window(SDL_Window* window, const Size<int>& sz) :
-         window(window), sz(sz) { }
-
-      SDL_Window* window;
-      Size<int> sz;
+      virtual bool is_fullscreen() const = 0;
+      virtual void set_fullscreen(bool fullscreen = true) = 0;
    };
 
    class Renderer {
    public:
-      virtual ~Renderer() {
-         SDL_DestroyRenderer(renderer);
-      }
+      virtual ~Renderer() { }
 
-      class Builder {
-      public:
-         Builder(shared_ptr<Window> window) :
-            window(window) { }
-         virtual ~Builder() { }
+      virtual shared_ptr<Image> load_image(const string& filename) const = 0;
 
-         Builder& with_logical_size(const Size<int>& logicalSize) {
-            this->logicalSize = logicalSize;
-            return *this;
-         }
+      virtual void clear() = 0;
+      virtual void display() = 0;
+      virtual void render(shared_ptr<const Animation> animation,
+         const Point<int>& pt) = 0;
+      virtual void render(shared_ptr<const Animation> animation,
+         const Rect<int>& dstRect) = 0;
+      virtual void render(shared_ptr<const Image> image,
+         const Point<int>& pt) = 0;
+      virtual void render(shared_ptr<const Image> image,
+         const Rect<int>& dstRect) = 0;
+      virtual void render(shared_ptr<const Image> image,
+         const Rect<int>& srcRect,
+         const Rect<int>& dstRect) = 0;
 
-         Builder& with_acceleration() {
-            flags |= SDL_RENDERER_ACCELERATED;
-            return *this;
-         }
+      virtual void set_draw_color(const Color& color) = 0;
 
-         Builder& with_vsync() {
-            flags |= SDL_RENDERER_PRESENTVSYNC;
-            return *this;
-         }
-
-         shared_ptr<Renderer> create() const {
-            SDL_Renderer* renderer = SDL_CreateRenderer(
-                  window->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
-            if (renderer == nullptr) {
-               throw GraphicsException(tfm::format(
-                  "Failed to create renderer: %s",
-                  string(SDL_GetError())));
-            }
-
-            cout << "Logical Size: " << logicalSize << endl;
-
-            if (logicalSize.width > 0 || logicalSize.height > 0) {
-               SDL_RenderSetLogicalSize(renderer,
-                  logicalSize.width, logicalSize.height);
-            }
-
-            return shared_ptr<Renderer>(new Renderer(window, renderer));
-         }
-
-      private:
-         shared_ptr<Window> window;
-         Size<int> logicalSize = Size<int>(0, 0);
-         Uint32 flags;
-      };
-
-      void clear() {
-         SDL_RenderClear(renderer);
-      }
-
-      void display() {
-         SDL_RenderPresent(renderer);
-      }
-
-      void render(shared_ptr<const Animation> animation,
-                  const Point<int>& pt) {
-
-         render(animation, Rect<int>(pt, animation->szFrame));
-      }
-
-      void render(shared_ptr<const Animation> animation,
-                  const Rect<int>& dstRect) {
-         render(animation->image,
-                animation->get_frame_rect(),
-                dstRect);
-      }
-
-      void render(shared_ptr<const Image> image,
-                  const Point<int>& pt) {
-
-         render(image, Rect<int>(Point<int>(), image->sz),
-                Rect<int>(pt, image->sz));
-      }
-
-      void render(shared_ptr<const Image> image,
-            const Rect<int>& src,
-            const Rect<int>& dst) {
-
-         SDL_RenderCopy(renderer, image->texture,
-               (SDL_Rect*)&src, (SDL_Rect*)&dst);
-      }
-
-      shared_ptr<Image> load_image(const string& filename) {
-         SDL_Texture* texture = IMG_LoadTexture(renderer, filename.c_str());
-
-         if (texture == nullptr) {
-            throw GraphicsException(tfm::format("Failed to load image from file '%s': %s",
-               filename, string(SDL_GetError())));
-         }
-
-         return make_shared<Image>(texture);
-      }
-
-      void set_draw_color(const Color& color) {
-         SDL_SetRenderDrawColor(renderer,
-               color.r, color.g, color.b, color.a);
-      }
-
-   private:
-      Renderer(shared_ptr<Window> window, SDL_Renderer* renderer) :
-         window(window), renderer(renderer) { }
-
-      shared_ptr<Window> window;
-      SDL_Renderer* renderer;
+      virtual Size<int> get_logical_size() const = 0;
+      virtual void set_logical_size(const Size<int>& sz) = 0;
    };
 }

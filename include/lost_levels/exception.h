@@ -5,12 +5,12 @@
  * Date: Tuesday, Jan 6 2014
  */
 #pragma once
-#include "common.h"
+#include "lain/exception.h"
 
 namespace lost_levels {
-   class DataFormatException : public Exception {
+   class DataFormatException : public lain::Exception {
    public:
-      DataFormatException(const string& message) :
+      DataFormatException(const std::string& message) :
          Exception(message) { }
    };
 }

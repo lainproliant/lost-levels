@@ -6,8 +6,9 @@
  */
 #pragma once
 #include <csignal>
+#include <stack>
 
-#include "common.h"
+#include "lain/exception.h"
 #include "lost_levels/timer.h"
 #include "lost_levels/event.h"
 #include "lost_levels/input.h"
@@ -17,9 +18,12 @@
 namespace lost_levels {
    using namespace std;
    using namespace lain;
-   using namespace lain::getopt;
 
    class Engine;
+
+   class EngineException : public Exception {
+      using Exception::Exception;
+   };
 
    class State {
    public:
@@ -43,64 +47,55 @@ namespace lost_levels {
    protected:
       EventBus bus;
       Engine& engine;
-      shared_ptr<ResourceManager> resourceManager = nullptr;
    };
 
    class Engine {
    public:
-      Engine() : parser(OptionParser("", {})) { }
+      Engine() {
+         bus.subscribe("Engine.Quit", [this](const Event&) {
+            clear_state();
+         });
+      }
 
       virtual ~Engine() { }
 
-      Uint32 get_physics_frames() const {
-         return physicsTimer->get_frames();
-      }
-
-      Uint32 get_graphics_frames() const {
-         return graphicsTimer->get_frames();
+      shared_ptr<Window> get_window() const {
+         return window;
       }
 
       shared_ptr<Renderer> get_renderer() const {
          return renderer;
       }
 
-      shared_ptr<ResourceManager> get_resource_manager() const {
-         return resourceManager;
+      shared_ptr<Timer<uint32_t>> get_graphics_timer() {
+         return graphicsTimer;
       }
 
-      int run(int argc, char** argv) {
+      shared_ptr<Timer<uint32_t>> get_physics_timer() {
+         return physicsTimer;
+      }
+
+      int run() {
          signal(SIGSEGV, signal_callback);
 
          try {
-            parser.parse(argc, argv);
+            initialize();
 
-            phase1();
-            phase2();
-            phase3();
+            require(graphicsTimer != nullptr, "graphics timer");
+            require(physicsTimer != nullptr, "physics timer");
+            require(window != nullptr, "window");
+            require(renderer != nullptr, "renderer");
+            require(inputProvider != nullptr, "input provider");
+            require(! states.empty(), "initial state");
 
             graphicsTimer->start();
             physicsTimer->start();
-
-            if (! inputSource) {
-               throw Exception("No input source is defined.");
-            }
-
-            /*
-            if (! audioMixer) {
-               throw Exception("No audio mixer was defined.");
-            }
-            */
-
-            if (states.empty()) {
-               throw Exception("No initial state was defined.");
-            }
 
             while (! states.empty()) {
                input();
                update();
                paint();
-
-               SDL_Delay(graphicsTimer->get_wait_time());
+               delay();
             }
 
             return 0;
@@ -113,6 +108,13 @@ namespace lost_levels {
          }
       }
 
+      template<class T, class... Args>
+      void push_state(Args&&... args) {
+         currentState = make_shared<T>(*this, args...);
+         currentState->initialize();
+         states.push(currentState);
+      }
+
       void pop_state() {
          states.pop();
 
@@ -121,83 +123,47 @@ namespace lost_levels {
          }
       }
 
-      template<class T>
-      void push_state() {
-         currentState = make_shared<T>(*this);
-         currentState->initialize();
-         states.push(currentState);
+      template<class T, class... Args>
+      void reset_state(Args&&... args) {
+         clear_state();
+         push_state<T>(args...);
+      }
+
+      void clear_state() {
+         while (! states.empty()) {
+            states.pop();
+         }
       }
 
    protected:
-      const OptionParser& get_options() const {
-         return parser;
-      }
-
-      void set_graphics_timer(shared_ptr<Timer<Uint32>> timer) {
-         graphicsTimer = timer;
-      }
-
-      void set_input_source(shared_ptr<InputSource> inputSource) {
-         this->inputSource = inputSource;
-      }
-
-      void set_option_parser(const OptionParser& parser) {
-         this->parser = parser;
-      }
-
-      void set_physics_timer(shared_ptr<Timer<Uint32>> timer) {
-         physicsTimer = timer;
+      void set_window(shared_ptr<Window> window) {
+         this->window = window;
       }
 
       void set_renderer(shared_ptr<Renderer> renderer) {
          this->renderer = renderer;
-
-         set_resource_manager(make_shared<ResourceManager>(
-            physicsTimer, get_renderer()));
       }
 
-      void set_resource_manager(shared_ptr<ResourceManager> resourceManager) {
-         this->resourceManager = resourceManager;
+      void set_graphics_timer(shared_ptr<Timer<uint32_t>> timer) {
+         graphicsTimer = timer;
       }
 
-      /*
-      void set_audio_mixer(shared_ptr<AudioMixer> audioMixer) {
-         this->audioMixer = audioMixer;
-      }
-      */
-
-      virtual void phase1() {
-         if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-            throw Exception(string("Failed to initialize SDL: ") +
-               SDL_GetError());
-         }
-
-         set_physics_timer(create_sdl_timer(1000 / 100, true));
-         set_graphics_timer(create_sdl_timer(1000 / 60));
+      void set_physics_timer(shared_ptr<Timer<uint32_t>> timer) {
+         physicsTimer = timer;
       }
 
-      virtual void phase2() {
-         initialize();
+      void set_input_provider(shared_ptr<InputProvider> provider) {
+         inputProvider = provider;
       }
 
-      virtual void phase3() {
-         bus.subscribe("Engine::Quit", [this](const Event&) {
-            while (! this->states.empty()) {
-               this->states.pop();
-            }
-         });
-      }
+      virtual void initialize() = 0;
 
-      virtual void initialize() { }
-
-      virtual void on_fatal_exception(const exception&) { }
-
-      void input() {
-         inputSource->feed(bus);
+      virtual void input() {
+         inputProvider->channel(bus);
          bus.channel(currentState->get_event_bus());
       }
 
-      bool update() {
+      virtual bool update() {
          bus.process_events();
 
          while (physicsTimer->update()) {
@@ -208,10 +174,19 @@ namespace lost_levels {
          return true;
       }
 
-      void paint() {
+      virtual void paint() {
          if (graphicsTimer->update()) {
             currentState->paint();
             renderer->display();
+         }
+      }
+
+      virtual void delay() { }
+
+      void require(bool expr, const string& item) {
+         if (! expr) {
+            throw EngineException(tfm::format(
+               "No %s was provided.", item));
          }
       }
 
@@ -223,18 +198,17 @@ namespace lost_levels {
          exit(1);
       }
 
-      shared_ptr<Timer<Uint32>> physicsTimer = nullptr;
-      shared_ptr<Timer<Uint32>> graphicsTimer = nullptr;
-      shared_ptr<InputSource> inputSource = nullptr;
+      shared_ptr<Timer<uint32_t>> physicsTimer = nullptr;
+      shared_ptr<Timer<uint32_t>> graphicsTimer = nullptr;
+
+      shared_ptr<InputProvider> inputProvider = nullptr;
+      shared_ptr<Window> window = nullptr;
       shared_ptr<Renderer> renderer = nullptr;
-      shared_ptr<ResourceManager> resourceManager = nullptr;
 
       stack<shared_ptr<State>> states;
       shared_ptr<State> currentState = nullptr;
 
       EventBus bus;
-
-      OptionParser parser;
       int returnCode = 0;
    };
 }

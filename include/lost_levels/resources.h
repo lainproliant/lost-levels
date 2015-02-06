@@ -5,7 +5,6 @@
  * Date: Monday, Feb 2 2015
  */
 #pragma once
-#include "common.h"
 #include "lost_levels/settings.h"
 #include "lost_levels/graphics.h"
 #include "apathy/path.hpp"
@@ -23,7 +22,7 @@ namespace lost_levels {
 
    class ResourceManager {
    public:
-      ResourceManager(shared_ptr<Timer<Uint32>> timer,
+      ResourceManager(shared_ptr<Timer<unsigned int>> timer,
                       shared_ptr<Renderer> renderer) :
          timer(timer), renderer(renderer) { }
 
@@ -125,7 +124,7 @@ namespace lost_levels {
       }
 
    private:
-      shared_ptr<const Timer<Uint32>> timer;
+      shared_ptr<const Timer<unsigned int>> timer;
       shared_ptr<Renderer> renderer;
       map<string, shared_ptr<Image>> image_resources;
       map<string, shared_ptr<Animation>> anim_resources;

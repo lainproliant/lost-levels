@@ -73,6 +73,11 @@ void rect_line_intersect_test(const Rect<int>& R1, const Line<int>& L, bool resu
    assert_true(R1.intersects(L) == result);
 }
 
+void rect_rect_contains_test(const Rect<int>& R1, const Rect<int>& R2, bool result) {
+   cout << R1 << string(result ? " contains " : " does not contain ") << R2 << endl;
+   assert_true(R1.contains(R2) == result);
+}
+
 int randi(int imin = -100, int imax = 100) {
    return rand() % (imax - imin) + imin;
 }
@@ -147,6 +152,26 @@ int main() {
          rect_line_intersect_test(R1, L3, true);
          rect_line_intersect_test(R1, L4, false);
          rect_line_intersect_test(R1, L5, true);
+
+         return true;
+      })
+      .test("Geometry-005: Rectangle contains other rectangles", [&]()->bool {
+         Rect<int> R0 = Rect<int>(0, 0, 10, 10);
+         Rect<int> R1 = Rect<int>(0, 0, 5, 5);
+         Rect<int> R2 = Rect<int>(5, 0, 5, 5);
+         Rect<int> R3 = Rect<int>(0, 5, 5, 5);
+         Rect<int> R4 = Rect<int>(5, 5, 5, 5);
+         Rect<int> R5 = Rect<int>(2, 2, 5, 5);
+         Rect<int> R6 = Rect<int>(7, 7, 5, 5);
+         Rect<int> R7 = Rect<int>(-10, -10, 5, 5);
+
+         rect_rect_contains_test(R0, R1, true);
+         rect_rect_contains_test(R0, R2, true);
+         rect_rect_contains_test(R0, R3, true);
+         rect_rect_contains_test(R0, R4, true);
+         rect_rect_contains_test(R0, R5, true);
+         rect_rect_contains_test(R0, R6, false);
+         rect_rect_contains_test(R0, R7, false);;
 
          return true;
       })

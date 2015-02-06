@@ -7,7 +7,7 @@
  * Based on Timer code written in 2011 by Lee Supe.
  */
 #pragma once
-#include "common.h"
+#include <memory>
 
 namespace lost_levels {
    using namespace std;
@@ -19,7 +19,7 @@ namespace lost_levels {
    class Timer : public enable_shared_from_this<Timer<T>> {
    public:
       typedef function<T(void)> TimeFunction;
-      static shared_ptr<Timer<T>> create(TimeFunction getTime, Uint32 interval,
+      static shared_ptr<Timer<T>> create(TimeFunction getTime, T interval,
             bool accumulate = false) {
          return shared_ptr<Timer<T>>(new Timer<T>(getTime, interval, accumulate));
       }
@@ -165,8 +165,4 @@ namespace lost_levels {
          return shared_ptr<Timer<T>>(new RelativeTimer(*this));
       }
    };
-
-   inline shared_ptr<Timer<Uint32>> create_sdl_timer(Uint32 interval, bool accumulate = false) {
-      return Timer<Uint32>::create(SDL_GetTicks, interval, accumulate);
-   }
 }

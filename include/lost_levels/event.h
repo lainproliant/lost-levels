@@ -5,7 +5,10 @@
  * Date: Friday, Jan 2 2015
  */
 #pragma once
-#include "common.h"
+#include <unordered_map>
+#include <functional>
+
+#include "lain/exception.h"
 
 namespace lost_levels {
    using namespace std;

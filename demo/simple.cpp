@@ -1,5 +1,6 @@
 #include "lost_levels/engine.h"
-#include "lost_levels/graphics.h"
+#include "lost_levels/graphics_sdl2.h"
+#include "lost_levels/timer_sdl2.h"
 
 #pragma clang diagnostic ignored "-Wswitch"
 
@@ -7,17 +8,18 @@ using namespace std;
 using namespace lain;
 using namespace lost_levels;
 
+const Size<int> WINDOW_SIZE = Size<int>(960, 540);
 const Size<int> LOGICAL_SIZE = Size<int>(480, 270);
 const Size<int> BLOCK_SIZE = Size<int>(16, 16);
+const Color CLEAR_COLOR = Color(0, 0, 0);
 
 class Block {
 public:
    Block(Point<float> location,
          Vector<float> velocity,
          shared_ptr<Animation> animation) :
-      animation(animation), location(location),
-      velocity(velocity) {
-
+            animation(animation), location(location),
+            velocity(velocity) {
       animation->start();
    }
 
@@ -51,10 +53,9 @@ private:
 
 class InitialState : public State {
 public:
-   InitialState(Engine& engine) : State(engine) {}
-
+   InitialState(Engine& engine, const ResourceManager& rm) : State(engine), rm(rm) { }
    void initialize() override {
-      diagTimer = create_sdl_timer(5000);
+      diagTimer = sdl2::create_timer(5000);
       diagTimer->start();
 
       bus.subscribe("NewBlock", [this](const Event&) {
@@ -89,15 +90,13 @@ public:
 
          blocks.push_back(make_shared<Block>(
             location, velocity,
-            engine.get_resource_manager()->
-            get_animation("question-block")->
-            copy()));
+            rm.get_animation("question-block")->copy()));
       }
    }
 
    void update() override {
       if (diagTimer->update()) {
-         Uint32 graphicsFrames = engine.get_graphics_frames();
+         uint32_t graphicsFrames = engine.get_graphics_timer()->get_frames();
          double fps = (double)(graphicsFrames - prevGraphicsFrames) / 5.0;
          prevGraphicsFrames = graphicsFrames;
          tfm::format(cout, "FPS: %f, Sprites: %d\n", fps, blocks.size());
@@ -118,19 +117,21 @@ public:
    }
 
 private:
-   shared_ptr<Timer<Uint32>> diagTimer;
+   shared_ptr<Timer<uint32_t>> diagTimer;
    vector<shared_ptr<Block>> blocks;
-   Uint32 prevGraphicsFrames = 0;
+   uint32_t prevGraphicsFrames = 0;
+
+   const ResourceManager& rm;
 };
 
-class DemoInputSource : public InputSource {
-   void feed(EventBus& bus) override {
+class DemoInputProvider : public InputProvider {
+   void channel(EventBus& bus) override {
       SDL_Event e;
 
       while (SDL_PollEvent(&e)) {
          switch(e.type) {
          case SDL_QUIT:
-            bus.publish("Engine::Quit");
+            bus.publish("Engine.Quit");
             break;
 
          case SDL_KEYDOWN:
@@ -154,7 +155,7 @@ class DemoInputSource : public InputSource {
                break;
 
             case SDL_SCANCODE_Q:
-               bus.publish("Engine::Quit");
+               bus.publish("Engine.Quit");
                break;
             }
          }
@@ -164,33 +165,38 @@ class DemoInputSource : public InputSource {
 
 class DemoEngine : public Engine {
 public:
+   DemoEngine() : Engine() { }
+
    void initialize() override {
-      shared_ptr<Window> window = Window::Builder()
-         .with_title("Flashing Question Blocks Demo")
-         .with_size(Size<int>(960, 540))
-         .create();
+      set_window(sdl2::create_window());
+      set_renderer(sdl2::create_renderer(get_window()));
+      set_physics_timer(sdl2::create_timer(1000 / 100, true));
+      set_graphics_timer(sdl2::create_timer(1000 / 60));
+      set_input_provider(make_shared<DemoInputProvider>());
 
-      shared_ptr<Renderer> renderer = Renderer::Builder(window)
-         .with_logical_size(LOGICAL_SIZE)
-         .with_acceleration()
-         .with_vsync()
-         .create();
+      get_window()->set_size(WINDOW_SIZE);
+      get_renderer()->set_logical_size(LOGICAL_SIZE);
+      get_renderer()->set_draw_color(CLEAR_COLOR);
 
-      renderer->set_draw_color(Color(0, 0, 0));
-      set_renderer(renderer);
+      rm = make_shared<ResourceManager>(
+            get_physics_timer(), get_renderer());
+      rm->load_file("simple/resource.json");
 
-      cout << "Called DemoEngine::initialize()." << endl;
-      set_input_source(make_shared<DemoInputSource>());
-      get_resource_manager()->load_file("simple/resource.json");
-
-      push_state<InitialState>();
+      push_state<InitialState>(*rm);
    }
+
+   void delay() override {
+      SDL_Delay(get_graphics_timer()->get_wait_time());
+   }
+
+private:
+   shared_ptr<ResourceManager> rm;
 };
 
-int main(int argc, char** argv) {
+int main() {
    DemoEngine engine;
    srand(time(0));
 
-   return engine.run(argc, argv);
+   return engine.run();
 }
 

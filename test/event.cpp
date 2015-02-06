@@ -29,7 +29,7 @@ int main() {
       .test("Event-001: Basic EventBus test", [&]()->bool {
          bool called = false;
          const EventType TEST_EVENT = declareEvent("testEvent");
-         EventBus bus = EventBus();
+         EventBus bus;
 
          bus.subscribe(TEST_EVENT, [&called](const Event& event) {
             cout << "Closure received event "
@@ -43,7 +43,7 @@ int main() {
       })
       .test("Event-002: Custom event types test", [&]()->bool {
          bool called = false;
-         EventBus bus = EventBus();
+         EventBus bus;
 
          bus.subscribe(CustomEvent::TYPE, [&called](const Event& event) {
             cout << "Event type: " << event.get_type().get_name() << endl;
