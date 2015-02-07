@@ -69,10 +69,7 @@ uint8_t r, g, b, a;
                   "Invalid frame expression: %s", frameExpr));
             }
             
-            // TODO: Find a better parseint.
-            frames.push_back(Frame(
-               atoi(tuple[0].c_str()),
-               atoi(tuple[1].c_str())));
+            frames.push_back(Frame(stoi(tuple[0]), stoi(tuple[1])));
          }
 
          return frames;

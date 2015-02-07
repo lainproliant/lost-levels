@@ -168,13 +168,12 @@ public:
    DemoEngine() : Engine() { }
 
    void initialize() override {
-      set_window(sdl2::create_window());
+      set_window(sdl2::create_window(Size<int>(1280, 720)));
       set_renderer(sdl2::create_renderer(get_window()));
       set_physics_timer(sdl2::create_timer(1000 / 100, true));
       set_graphics_timer(sdl2::create_timer(1000 / 60));
       set_input_provider(make_shared<DemoInputProvider>());
 
-      get_window()->set_size(WINDOW_SIZE);
       get_renderer()->set_logical_size(LOGICAL_SIZE);
       get_renderer()->set_draw_color(CLEAR_COLOR);
 

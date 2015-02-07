@@ -169,13 +169,12 @@ namespace lost_levels {
       };
 
       inline shared_ptr<lost_levels::Window> create_window(
+            const Size<int>& sz = Window::default_size(),
             Uint32 flags = SDL_WINDOW_SHOWN) {
          SDL_Window* window = SDL_CreateWindow("",
                SDL_WINDOWPOS_CENTERED,
                SDL_WINDOWPOS_CENTERED,
-               Window::default_size().width,
-               Window::default_size().height,
-               flags);
+               sz.width, sz.height, flags);
 
          if (window == nullptr) {
             throw GraphicsException(tfm::format(
