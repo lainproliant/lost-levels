@@ -1,4 +1,4 @@
-#include "lost_levels/timer.h"
+#include "lost_levels/timer_sdl2.h"
 #include "lain/testing.h"
 
 using namespace std;
@@ -7,11 +7,11 @@ using namespace lain::testing;
 using namespace lost_levels;
 
 double run_timer_sim(int fps, const unsigned int frames) {
-   shared_ptr<Timer<Uint32>> timer = create_sdl_timer(1000 / fps);
+   shared_ptr<Timer<uint32_t>> timer = sdl2::create_timer(1000 / fps);
    timer->start();
 
    double totalErrorTime = 0.0;
-   Uint32 terr;
+   uint32_t terr;
 
    while (timer->get_frames() < frames) {
       if (timer->update(&terr)) {
@@ -51,26 +51,26 @@ int main() {
          const int GRAPHICS_FPS = 30;
          const int PHYSICS_FPS = 100;
 
-         auto graphics_timer = create_sdl_timer(1000 / GRAPHICS_FPS);
-         auto physics_timer = create_sdl_timer(1000 / PHYSICS_FPS, true); // accumulate
+         auto graphics_timer = sdl2::create_timer(1000 / GRAPHICS_FPS);
+         auto physics_timer = sdl2::create_timer(1000 / PHYSICS_FPS, true); // accumulate
 
          graphics_timer->start();
          physics_timer->start();
 
-         Uint32 startTime = SDL_GetTicks();
+         uint32_t startTime = SDL_GetTicks();
          double totalRenderTime = 0.0;
          double totalRenderErrorTime = 0.0;
          double totalPhysicsErrorTime = 0.0;
 
          while (SDL_GetTicks() - startTime < (1000 * SECONDS)) {
-            Uint32 terr;
+            uint32_t terr;
 
             if (graphics_timer->update(&terr)) {
-               Uint32 renderStart = SDL_GetTicks();
+               uint32_t renderStart = SDL_GetTicks();
                cout << ":";
                SDL_Delay(5 + rand() % 5);
                cout.flush();
-               Uint32 renderEnd = SDL_GetTicks();
+               uint32_t renderEnd = SDL_GetTicks();
                totalRenderTime += renderEnd - renderStart;
                totalRenderErrorTime += terr;
             }

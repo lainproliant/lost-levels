@@ -36,12 +36,12 @@ namespace lost_levels {
    }
 
    template<>
-   bool geometric_equal<double>(const double& a, const double& b) {
+   inline bool geometric_equal<double>(const double& a, const double& b) {
       return epsilon_equal(a, b);
    }
 
    template<>
-   bool geometric_equal<float>(const float& a, const float& b) {
+   inline bool geometric_equal<float>(const float& a, const float& b) {
       return epsilon_equal(a, b);
    }
 

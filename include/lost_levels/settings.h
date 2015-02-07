@@ -125,25 +125,25 @@ namespace lost_levels {
       }
 
       template <>
-      int get_value<int>(const pj::value& obj_value, const string& name) {
+      inline int get_value<int>(const pj::value& obj_value, const string& name) {
          return (int)get_value<double>(obj_value, name);
       }
 
       template <>
-      int get_value<int>(pj::value& obj_value, const string& name, const int& default_value) {
+      inline int get_value<int>(pj::value& obj_value, const string& name, const int& default_value) {
          return (int)(get_value<double>(obj_value, name,
                   (double)(default_value)));
       }
 
       template <>
-      void set_array<int>(pj::value& obj_value, const string& name, const vector<int>& vec) {
+      inline void set_array<int>(pj::value& obj_value, const string& name, const vector<int>& vec) {
          vector<double> db_vec;
          copy(vec.begin(), vec.end(), back_inserter(db_vec));
          set_array<double>(obj_value, name, db_vec);
       }
 
       template <>
-      vector<int> get_array<int>(const pj::value& obj_value, const string& name) {
+      inline vector<int> get_array<int>(const pj::value& obj_value, const string& name) {
          vector<int> vec;
          vector<double> db_vec = get_array<double>(obj_value, name);
          copy(db_vec.begin(), db_vec.end(), back_inserter(vec));
@@ -151,7 +151,7 @@ namespace lost_levels {
       }
 
       template <>
-      vector<int> get_array<int>(pj::value& obj_value, const string& name, const vector<int>& default_vec) {
+      inline vector<int> get_array<int>(pj::value& obj_value, const string& name, const vector<int>& default_vec) {
          try {
             return get_array<int>(obj_value, name);
 
@@ -298,7 +298,7 @@ namespace lost_levels {
 
    namespace settings_impl {
       template <>
-      vector<Settings> get_array<Settings>(const pj::value& obj_value, const string& name) {
+      inline vector<Settings> get_array<Settings>(const pj::value& obj_value, const string& name) {
          vector<pj::object> obj_array = get_array<pj::object>(obj_value, name);
          vector<Settings> settings_vec(obj_array.size());
 
