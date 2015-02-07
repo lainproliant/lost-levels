@@ -4,6 +4,7 @@
    ],
    "animations": [
       {"name": "question-block", "image": "question-block",
-       "frames": [15, 15, 15, 15], "looping": true, "width": 16, "height": 16}
+       "loop": true, "width": 16, "height": 16,
+       "frames": ["0,15", "1,15", "2,15", "1,15"]}
    ]
 }

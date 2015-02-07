@@ -111,11 +111,12 @@ namespace lost_levels {
 
          shared_ptr<Image> image = get_image(
                anim_entry.get<string>("image"));
-         vector<int> frames = anim_entry.get_array<int>("frames");
+         vector<Animation::Frame> frames = Animation::parse_frames(
+            anim_entry.get_array<string>("frames"));
          sz.width = anim_entry.get<int>("width");
          sz.height = anim_entry.get<int>("height");
 
-         bool looping = anim_entry.get_default<bool>("looping", false);
+         bool looping = anim_entry.get_default<bool>("loop", false);
 
          shared_ptr<Animation> anim = Animation::create(
             image, sz, frames, timer, looping);

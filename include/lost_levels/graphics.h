@@ -35,10 +35,49 @@ uint8_t r, g, b, a;
    public:
       virtual ~Image() { }
       virtual const Size<int>& get_size() const = 0;
+
+      Rect<int> get_tile_rect(const Size<int>& szTile, int tileNum) const {
+         const int tilesPerRow = get_size().width / szTile.width;
+
+         return Rect<int>(
+            szTile.width * (tileNum % tilesPerRow),
+            szTile.height * (tileNum / tilesPerRow),
+            szTile.width, szTile.height);
+      }
    };
 
    class Animation {
    public:
+      class Frame {
+      public:
+         Frame(int tileNum, uint32_t duration) :
+            tileNum(tileNum), duration(duration) { }
+
+         int tileNum;
+         uint32_t duration;
+      };
+
+      static vector<Frame> parse_frames(const vector<string>& frameExprs) {
+         vector<Frame> frames;
+
+         for (auto frameExpr : frameExprs) {
+            vector<string> tuple;
+            str::split(tuple, frameExpr, ",");
+
+            if (tuple.size() != 2) {
+               throw GraphicsException(tfm::format(
+                  "Invalid frame expression: %s", frameExpr));
+            }
+            
+            // TODO: Find a better parseint.
+            frames.push_back(Frame(
+               atoi(tuple[0].c_str()),
+               atoi(tuple[1].c_str())));
+         }
+
+         return frames;
+      }
+
       Animation(const Animation& rhs) :
          timer(rhs.timer->copy()), image(rhs.image),
          szFrame(rhs.szFrame), frames(rhs.frames),
@@ -46,7 +85,7 @@ uint8_t r, g, b, a;
 
       static shared_ptr<Animation> create(
          shared_ptr<const Image> image,
-         const Size<int>& szFrame, const vector<int>& frames,
+         const Size<int>& szFrame, const vector<Frame>& frames,
          shared_ptr<const Timer<unsigned int>>& timer,
          bool looping = false) {
 
@@ -76,13 +115,7 @@ uint8_t r, g, b, a;
       }
 
       Rect<int> get_frame_rect() const {
-         const Size<int>& szImage = image->get_size();
-
-         return Rect<int>(
-            Point<int>(
-               (szFrame.width * currentFrame) % szImage.width,
-               (szFrame.height * ((szFrame.width * currentFrame) / szImage.width))),
-            szFrame);
+         return image->get_tile_rect(szFrame, frames[currentFrame].tileNum);
       }
 
       shared_ptr<const Image> get_image() const {
@@ -106,7 +139,7 @@ uint8_t r, g, b, a;
       }
 
       void start() {
-         timer->set_interval(frames[currentFrame]);
+         timer->set_interval(frames[currentFrame].duration);
          timer->start();
       }
 
@@ -124,7 +157,7 @@ uint8_t r, g, b, a;
 
    private:
       Animation(shared_ptr<const Image> image,
-         const Size<int>& szFrame, const vector<int>& frames,
+         const Size<int>& szFrame, const vector<Frame>& frames,
          shared_ptr<const Timer<unsigned int>> timer,
          bool looping = true) :
 
@@ -136,7 +169,7 @@ uint8_t r, g, b, a;
       shared_ptr<Timer<unsigned int>> timer;
       shared_ptr<const Image> image;
       Size<int> szFrame;
-      vector<int> frames;
+      vector<Frame> frames;
       bool looping;
       size_t numFrames;
 
