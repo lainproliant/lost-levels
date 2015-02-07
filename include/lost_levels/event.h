@@ -24,8 +24,7 @@ namespace lost_levels {
 
    class UnknownEventTypeException : public Exception {
    public:
-      UnknownEventTypeException(const string& eventType) :
-         Exception(string("Unknown event type: ") + eventType) { }
+      using Exception::Exception;
    };
 
    /**

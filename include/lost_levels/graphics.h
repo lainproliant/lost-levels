@@ -16,8 +16,7 @@ namespace lost_levels {
 
    class GraphicsException : public Exception {
    public:
-      GraphicsException(const string& message) :
-         Exception(message) { }
+      using Exception::Exception;
    };
 
    class Color {

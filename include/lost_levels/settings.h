@@ -20,9 +20,7 @@ namespace lost_levels {
 
    class SettingsException : public Exception {
    public:
-      SettingsException(const string& msg) :
-         Exception(msg) { }
-      virtual ~SettingsException() { }
+      using Exception::Exception;
    };
 
    namespace settings_impl {
