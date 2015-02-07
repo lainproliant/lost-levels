@@ -27,7 +27,8 @@ namespace lost_levels {
          r(r), g(g), b(b), a(0) { }
       Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
          r(r), g(g), b(b), a(a) { }
-uint8_t r, g, b, a;
+
+      uint8_t r, g, b, a;
    };
 
    class Image {
@@ -191,14 +192,7 @@ uint8_t r, g, b, a;
 
       virtual void clear() = 0;
       virtual void display() = 0;
-      virtual void render(shared_ptr<const Animation> animation,
-         const Point<int>& pt) = 0;
-      virtual void render(shared_ptr<const Animation> animation,
-         const Rect<int>& dstRect) = 0;
-      virtual void render(shared_ptr<const Image> image,
-         const Point<int>& pt) = 0;
-      virtual void render(shared_ptr<const Image> image,
-         const Rect<int>& dstRect) = 0;
+
       virtual void render(shared_ptr<const Image> image,
          const Rect<int>& srcRect,
          const Rect<int>& dstRect) = 0;
@@ -207,5 +201,30 @@ uint8_t r, g, b, a;
 
       virtual Size<int> get_logical_size() const = 0;
       virtual void set_logical_size(const Size<int>& sz) = 0;
+
+      virtual void render(shared_ptr<const Animation> animation,
+            const Point<int>& pt) {
+
+         render(animation, Rect<int>(pt, animation->get_frame_rect().sz));
+      }
+
+      virtual void render(shared_ptr<const Animation> animation,
+            const Rect<int>& dstRect) {
+         render(animation->get_image(),
+               animation->get_frame_rect(),
+               dstRect);
+      }
+
+      virtual void render(shared_ptr<const lost_levels::Image> image,
+            const Point<int>& pt) {
+         render(image, Rect<int>(Point<int>(), image->get_size()),
+               Rect<int>(pt, image->get_size()));
+      }
+
+      virtual void render(shared_ptr<const lost_levels::Image> image,
+            const Rect<int>& dstRect) {
+         render(image, Rect<int>(Point<int>(0, 0), image->get_size()),
+               dstRect);
+      }
    };
 }

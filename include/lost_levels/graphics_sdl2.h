@@ -100,34 +100,6 @@ namespace lost_levels {
             SDL_RenderPresent(renderer);
          }
 
-         void render(shared_ptr<const Animation> animation,
-                     const Point<int>& pt) override {
-
-            render(animation, Rect<int>(pt, animation->get_frame_rect().sz));
-         }
-
-         void render(shared_ptr<const Animation> animation,
-                     const Rect<int>& dstRect) override {
-            render(animation->get_image(),
-                   animation->get_frame_rect(),
-                   dstRect);
-         }
-
-         void render(shared_ptr<const lost_levels::Image> imageIn,
-                     const Point<int>& pt) override {
-            shared_ptr<const Image> image =
-               static_pointer_cast<const Image>(imageIn);
-
-            render(image, Rect<int>(Point<int>(), image->get_size()),
-                   Rect<int>(pt, image->get_size()));
-         }
-
-         void render(shared_ptr<const lost_levels::Image> image,
-                     const Rect<int>& dstRect) override {
-            render(image, Rect<int>(Point<int>(0, 0), image->get_size()),
-               dstRect);
-         }
-
          void render(shared_ptr<const lost_levels::Image> imageIn,
                const Rect<int>& src,
                const Rect<int>& dst) override {
