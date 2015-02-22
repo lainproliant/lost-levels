@@ -16,8 +16,7 @@ namespace lost_levels {
 
    class ResourceException : public Exception {
    public:
-      ResourceException(const string& message) :
-         Exception(message) { }
+      using Exception::Exception;
    };
 
    class ResourceManager {
