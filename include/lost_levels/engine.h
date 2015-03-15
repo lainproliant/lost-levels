@@ -10,8 +10,6 @@
 
 #include "lain/exception.h"
 #include "lost_levels/timer.h"
-#include "lost_levels/event.h"
-#include "lost_levels/input.h"
 #include "lost_levels/graphics.h"
 #include "lost_levels/resources.h"
 
@@ -33,30 +31,17 @@ namespace lost_levels {
       virtual ~State() { }
 
       virtual void initialize() = 0;
+      virtual void input() = 0;
       virtual void update() = 0;
       virtual void paint() = 0;
 
-      EventBus& get_event_bus() {
-         return bus;
-      }
-
-      void process_events() {
-         bus.process_events();
-      }
-
    protected:
-      EventBus bus;
       Engine& engine;
    };
 
    class Engine {
    public:
-      Engine() {
-         bus.subscribe("Engine.Quit", [this](const Event&) {
-            clear_state();
-         });
-      }
-
+      Engine() { }
       virtual ~Engine() { }
 
       shared_ptr<Window> get_window() const {
@@ -85,7 +70,6 @@ namespace lost_levels {
             require(physicsTimer != nullptr, "physics timer");
             require(window != nullptr, "window");
             require(renderer != nullptr, "renderer");
-            require(inputProvider != nullptr, "input provider");
             require(! states.empty(), "initial state");
 
             graphicsTimer->start();
@@ -152,26 +136,16 @@ namespace lost_levels {
          physicsTimer = timer;
       }
 
-      void set_input_provider(shared_ptr<InputProvider> provider) {
-         inputProvider = provider;
-      }
-
       virtual void initialize() = 0;
 
       virtual void input() {
-         inputProvider->channel(bus);
-         bus.channel(currentState->get_event_bus());
+         currentState->input();
       }
 
-      virtual bool update() {
-         bus.process_events();
-
+      virtual void update() {
          while (physicsTimer->update()) {
-            currentState->process_events();
             currentState->update();
          }
-
-         return true;
       }
 
       virtual void paint() {
@@ -201,14 +175,12 @@ namespace lost_levels {
       shared_ptr<Timer<uint32_t>> physicsTimer = nullptr;
       shared_ptr<Timer<uint32_t>> graphicsTimer = nullptr;
 
-      shared_ptr<InputProvider> inputProvider = nullptr;
       shared_ptr<Window> window = nullptr;
       shared_ptr<Renderer> renderer = nullptr;
 
       stack<shared_ptr<State>> states;
       shared_ptr<State> currentState = nullptr;
 
-      EventBus bus;
       int returnCode = 0;
    };
 }

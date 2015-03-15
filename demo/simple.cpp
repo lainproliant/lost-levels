@@ -57,22 +57,6 @@ public:
    void initialize() override {
       diagTimer = sdl2::create_timer(5000);
       diagTimer->start();
-
-      bus.subscribe("NewBlock", [this](const Event&) {
-         new_block();
-      });
-
-      bus.subscribe("NewBlockTimes10", [this](const Event&) {
-         new_block(100);
-      });
-
-      bus.subscribe("RemoveBlock", [this](const Event&) {
-         remove_block();
-      });
-
-      bus.subscribe("RemoveBlockTimes10", [this](const Event&) {
-         remove_block(100);
-      });
    }
 
    void remove_block(int num = 1) {
@@ -91,6 +75,45 @@ public:
          blocks.push_back(make_shared<Block>(
             location, velocity,
             rm.get_animation("question-block")->copy()));
+      }
+   }
+
+   void input() override {
+      SDL_Event e;
+
+      while (SDL_PollEvent(&e)) {
+         switch(e.type) {
+         case SDL_QUIT:
+            engine.pop_state();
+            break;
+
+         case SDL_KEYDOWN:
+            switch (e.key.keysym.scancode) {
+            case SDL_SCANCODE_C:
+               if (e.key.keysym.mod & KMOD_SHIFT) {
+                  new_block(100);
+
+               } else {
+                  new_block();
+               }
+
+               break;
+
+            case SDL_SCANCODE_X:
+               if (e.key.keysym.mod & KMOD_SHIFT) {
+                  remove_block(100);
+
+               } else {
+                  remove_block();
+               }
+
+               break;
+
+            case SDL_SCANCODE_Q:
+               engine.pop_state();
+               break;
+            }
+         }
       }
    }
 
@@ -124,45 +147,6 @@ private:
    const ResourceManager& rm;
 };
 
-class DemoInputProvider : public InputProvider {
-   void channel(EventBus& bus) override {
-      SDL_Event e;
-
-      while (SDL_PollEvent(&e)) {
-         switch(e.type) {
-         case SDL_QUIT:
-            bus.publish("Engine.Quit");
-            break;
-
-         case SDL_KEYDOWN:
-            switch (e.key.keysym.scancode) {
-            case SDL_SCANCODE_C:
-               if (e.key.keysym.mod & KMOD_SHIFT) {
-                  bus.publish("NewBlockTimes10");
-
-               } else {
-                  bus.publish("NewBlock");
-               }
-               break;
-
-            case SDL_SCANCODE_X:
-               if (e.key.keysym.mod & KMOD_SHIFT) {
-                  bus.publish("RemoveBlockTimes10");
-
-               } else {
-                  bus.publish("RemoveBlock");
-               }
-               break;
-
-            case SDL_SCANCODE_Q:
-               bus.publish("Engine.Quit");
-               break;
-            }
-         }
-      }
-   }
-};
-
 class DemoEngine : public Engine {
 public:
    DemoEngine() : Engine() { }
@@ -172,7 +156,6 @@ public:
       set_renderer(sdl2::create_renderer(get_window()));
       set_physics_timer(sdl2::create_timer(1000 / 100, true));
       set_graphics_timer(sdl2::create_timer(1000 / 60));
-      set_input_provider(make_shared<DemoInputProvider>());
 
       get_renderer()->set_logical_size(LOGICAL_SIZE);
       get_renderer()->set_draw_color(CLEAR_COLOR);
