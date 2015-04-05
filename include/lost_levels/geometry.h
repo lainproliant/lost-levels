@@ -74,7 +74,7 @@ namespace lost_levels {
        * the given 2D vectors, assuming they are on the same
        * coordinate plane.
        */
-      double cross_product(const Vector<T>& B) {
+      double cross_product(const Vector<T>& B) const {
          Vector<T> nA = normalize();
          Vector<T> nB = B.normalize();
 

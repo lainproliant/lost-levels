@@ -216,7 +216,7 @@ namespace lost_levels {
       }
 
       template <class T>
-      void set(string& name, const T& value) {
+      void set(const string& name, const T& value) {
          settings_impl::set_value<T>(*const_pointer_cast<const pj::value>(obj_value), name, value);
       }
 

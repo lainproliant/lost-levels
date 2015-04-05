@@ -193,14 +193,14 @@ namespace lost_levels {
       virtual void clear() = 0;
       virtual void display() = 0;
 
-      virtual void render(shared_ptr<const Image> image,
-         const Rect<int>& srcRect,
-         const Rect<int>& dstRect) = 0;
-
       virtual void set_draw_color(const Color& color) = 0;
 
       virtual Size<int> get_logical_size() const = 0;
       virtual void set_logical_size(const Size<int>& sz) = 0;
+
+      virtual void render(shared_ptr<const Image> image,
+         const Rect<int>& srcRect,
+         const Rect<int>& dstRect) = 0;
 
       virtual void render(shared_ptr<const Animation> animation,
             const Point<int>& pt) {

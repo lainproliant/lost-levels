@@ -19,7 +19,9 @@ namespace lost_levels {
                &sz.width, &sz.height);
          }
 
-         virtual ~Image() { }
+         virtual ~Image() {
+            SDL_DestroyTexture(texture);
+         }
 
          const Size<int>& get_size() const override {
             return sz;

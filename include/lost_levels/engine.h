@@ -52,11 +52,11 @@ namespace lost_levels {
          return renderer;
       }
 
-      shared_ptr<Timer<uint32_t>> get_graphics_timer() {
+      shared_ptr<Timer<uint32_t>> get_graphics_timer() const {
          return graphicsTimer;
       }
 
-      shared_ptr<Timer<uint32_t>> get_physics_timer() {
+      shared_ptr<Timer<uint32_t>> get_physics_timer() const {
          return physicsTimer;
       }
 
