@@ -5,7 +5,7 @@
  * Date: Monday, Feb 2 2015
  */
 #pragma once
-#include "lost_levels/settings.h"
+#include "lain/settings.h"
 #include "lost_levels/graphics.h"
 #include "apathy/path.hpp"
 
