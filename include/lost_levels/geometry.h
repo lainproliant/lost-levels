@@ -158,6 +158,10 @@ namespace lost_levels {
          return *this;
       }
 
+      Vector<T> to_vector() const {
+         return Vector<T>(x, y);
+      }
+
       friend Vector<T> operator-(const Point<T>& p1, const Point<T>& p2) {
          return Vector<T>(p2.x - p1.x, p2.y - p1.y);
       }
