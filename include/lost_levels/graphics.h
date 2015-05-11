@@ -41,6 +41,10 @@ namespace lost_levels {
       virtual ~Image() { }
       virtual const Size<int>& get_size() const = 0;
 
+      Point<int> get_tile_point(const Size<int>& szTile, int tileNum) const {
+         return get_rect().tile_point(szTile, tileNum);
+      }
+
       Rect<int> get_tile_rect(const Size<int>& szTile, int tileNum) const {
          return get_rect().tile_rect(szTile, tileNum);
       }
@@ -63,7 +67,7 @@ namespace lost_levels {
    class AsciiFont : public Font {
    public:
       AsciiFont(shared_ptr<const Image> image,
-                const Size<int> szChar) :
+                const Size<int>& szChar) :
          image(image), szChar(szChar) { }
 
       shared_ptr<const Image> get_image() const override {
@@ -148,8 +152,16 @@ namespace lost_levels {
          return make_shared<Animation>(*this);
       }
 
+      Point<int> get_frame_point() const {
+         return image->get_tile_point(szFrame, frames[currentFrame].tileNum);
+      }
+
       Rect<int> get_frame_rect() const {
          return image->get_tile_rect(szFrame, frames[currentFrame].tileNum);
+      }
+
+      Size<int> get_size() const {
+         return szFrame;
       }
 
       shared_ptr<const Image> get_image() const {
@@ -208,6 +220,32 @@ namespace lost_levels {
       size_t numFrames;
 
       unsigned int currentFrame = 0;
+   };
+
+   class AnimatedAsciiFont : public Font {
+   public:
+      AnimatedAsciiFont(shared_ptr<const Animation> animation,
+                        const Size<int>& szChar) :
+         animation(animation), frameRect(animation->get_size().rect()), szChar(szChar)
+      { }
+
+      shared_ptr<const Image> get_image() const override {
+         return animation->get_image();
+      }
+
+      Rect<int> get_char_rect(int c) const override {
+         if (c < ASCII_START || c > ASCII_END) {
+            throw GraphicsException(tfm::format("AsciiFont can only render characters between %d and %d: %d", ASCII_START, ASCII_END, c));
+         }
+
+         return Rect<int>(animation->get_frame_point() + frameRect.tile_point(szChar, c - ASCII_START).to_vector(),
+                          szChar);
+      }
+
+   private:
+      shared_ptr<const Animation> animation;
+      Rect<int> frameRect;
+      Size<int> szChar;
    };
 
    class Window {

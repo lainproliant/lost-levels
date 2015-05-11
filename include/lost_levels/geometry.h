@@ -391,14 +391,15 @@ namespace lost_levels {
          };
       }
 
-      Rect<T> tile_rect(const Size<T>& szTile, int tileNum) const {
+      Point<T> tile_point(const Size<T>& szTile, int tileNum) const {
          const int tilesPerRow = sz.width / szTile.width;
-
-         return Rect<T>(
-            pt + Point<T>(
+         return pt + Vector<T>(
             szTile.width * (tileNum % tilesPerRow),
-            szTile.height * (tileNum / tilesPerRow)),
-            szTile.width, szTile.height);
+            szTile.height * (tileNum / tilesPerRow));
+      }
+
+      Rect<T> tile_rect(const Size<T>& szTile, int tileNum) const {
+         return Rect<T>(tile_point(szTile, tileNum), szTile);
       }
 
       bool operator==(const Rect<T>& rhs) const {
