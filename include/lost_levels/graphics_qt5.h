@@ -14,12 +14,12 @@ namespace lost_levels {
    namespace qt5 {
       class Image : public lost_levels::Image {
       public:
-         Image(QImage& image) : image(image) {
-            sz = Size<int>(image.size.width, image.size.height);
-         }
+         Image(QImage& image) :
+            lost_levels::Image(Rect<int>(Point<int>(), image.size.width, image.size.height))
+         { }
 
          const Size<int>& get_size() const override {
-            return sz;
+            return get_rect().sz;
          }
 
          const QImage& get_qt5_image() const {
@@ -30,7 +30,6 @@ namespace lost_levels {
 
       private:
           QImage image;
-          Size<int> sz;
       };
 
       class Renderer : public lost_levels::Renderer {
