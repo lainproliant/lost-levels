@@ -6,9 +6,9 @@
  */
 #pragma once
 #include "lain/exception.h"
+#include "lain/settings.h"
 #include "lost_levels/geometry.h"
 #include "lost_levels/timer.h"
-#include "lost_levels/settings.h"
 
 namespace lost_levels {
    using namespace std;
