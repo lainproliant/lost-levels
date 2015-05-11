@@ -14,6 +14,9 @@
 namespace lost_levels {
    using namespace std;
 
+   template<class T>
+   class Rect;
+
    /**
     * Determine if the two floats provided are equal within the given
     * epsilon.  Default epsilon is FLT_EPSILON.
@@ -292,6 +295,10 @@ namespace lost_levels {
          return Size<int>(std::round(width), std::round(height));
       }
 
+      Rect<T> rect() const {
+         return Rect<T>(Point<T>(), *this);
+      }
+
       friend ostream& operator<<(ostream& out, const Size<T>& sz) {
          out << "Size(" << sz.width << " x " << sz.height << ")";
          return out;
@@ -382,6 +389,16 @@ namespace lost_levels {
          return {
             top(), left(), bottom(), right()
          };
+      }
+
+      Rect<T> tile_rect(const Size<T>& szTile, int tileNum) const {
+         const int tilesPerRow = sz.width / szTile.width;
+
+         return Rect<T>(
+            pt + Point<T>(
+            szTile.width * (tileNum % tilesPerRow),
+            szTile.height * (tileNum / tilesPerRow)),
+            szTile.width, szTile.height);
       }
 
       bool operator==(const Rect<T>& rhs) const {

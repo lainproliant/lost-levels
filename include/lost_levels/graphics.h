@@ -6,13 +6,16 @@
  */
 #pragma once
 #include "lain/exception.h"
+#include "lain/settings.h"
 #include "lost_levels/geometry.h"
 #include "lost_levels/timer.h"
-#include "lost_levels/settings.h"
 
 namespace lost_levels {
    using namespace std;
    using namespace lain;
+
+   const int ASCII_START = 32;
+   const int ASCII_END = 127;
 
    class GraphicsException : public Exception {
    public:
@@ -33,17 +36,51 @@ namespace lost_levels {
 
    class Image {
    public:
+      Image(const Rect<int>& rect) : rect(rect) { }
+
       virtual ~Image() { }
       virtual const Size<int>& get_size() const = 0;
 
       Rect<int> get_tile_rect(const Size<int>& szTile, int tileNum) const {
-         const int tilesPerRow = get_size().width / szTile.width;
-
-         return Rect<int>(
-            szTile.width * (tileNum % tilesPerRow),
-            szTile.height * (tileNum / tilesPerRow),
-            szTile.width, szTile.height);
+         return get_rect().tile_rect(szTile, tileNum);
       }
+
+   protected:
+      const Rect<int>& get_rect() const {
+         return rect;
+      }
+
+   private:
+      Rect<int> rect;
+   };
+
+   class Font {
+   public:
+      virtual Rect<int> get_char_rect(int c) const = 0;
+      virtual shared_ptr<const Image> get_image() const = 0;
+   };
+
+   class AsciiFont : public Font {
+   public:
+      AsciiFont(shared_ptr<const Image> image,
+                const Size<int> szChar) :
+         image(image), szChar(szChar) { }
+
+      shared_ptr<const Image> get_image() const override {
+         return image;
+      }
+
+      Rect<int> get_char_rect(int c) const {
+         if (c < ASCII_START || c > ASCII_END) {
+            throw GraphicsException(tfm::format("AsciiFont can only render characters between %d and %d: %d", ASCII_START, ASCII_END, c));
+         }
+
+         return get_image()->get_tile_rect(szChar, c - ASCII_START);
+      }
+
+   private:
+      shared_ptr<const Image> image;
+      Size<int> szChar;
    };
 
    class Animation {
@@ -68,7 +105,7 @@ namespace lost_levels {
                throw GraphicsException(tfm::format(
                   "Invalid frame expression: %s", frameExpr));
             }
-            
+
             frames.push_back(Frame(stoi(tuple[0]), stoi(tuple[1])));
          }
 

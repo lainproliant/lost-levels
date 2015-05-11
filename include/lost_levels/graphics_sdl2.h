@@ -12,19 +12,25 @@ namespace lost_levels {
    using namespace std;
 
    namespace sdl2 {
+      inline Size<int> get_texture_size(SDL_Texture* texture) {
+         Size<int> sz;
+         SDL_QueryTexture(texture, nullptr, nullptr,
+            &sz.width, &sz.height);
+         return sz;
+      }
+
       class Image : public lost_levels::Image {
       public:
-         Image(SDL_Texture* texture) : texture(texture) {
-            SDL_QueryTexture(texture, nullptr, nullptr,
-               &sz.width, &sz.height);
-         }
+         Image(SDL_Texture* texture) :
+            lost_levels::Image(get_texture_size(texture).rect()), texture(texture)
+         { }
 
          virtual ~Image() {
             SDL_DestroyTexture(texture);
          }
 
          const Size<int>& get_size() const override {
-            return sz;
+            return get_rect().sz;
          }
 
          SDL_Texture* get_sdl_texture() const {
@@ -33,7 +39,6 @@ namespace lost_levels {
 
       private:
          SDL_Texture* texture;
-         Size<int> sz;
       };
 
       class Window : public lost_levels::Window {
