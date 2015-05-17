@@ -113,6 +113,8 @@ public:
                engine.pop_state();
                break;
             }
+
+            break;
          }
       }
    }
@@ -131,8 +133,7 @@ public:
    }
 
    void paint() override {
-      shared_ptr<Renderer> renderer = engine.get_renderer();
-      engine.get_renderer()->clear();
+      auto renderer = engine.get_renderer();
 
       for (auto b : blocks) {
          renderer->render(b->get_animation(), b->get_location().round());

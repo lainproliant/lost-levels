@@ -17,6 +17,8 @@ namespace lost_levels {
    const int ASCII_START = 32;
    const int ASCII_END = 127;
 
+   class Renderer;
+
    class GraphicsException : public Exception {
    public:
       using Exception::Exception;
@@ -60,31 +62,42 @@ namespace lost_levels {
 
    class Font {
    public:
+      Font(Size<int> szChar) : szChar(szChar) { }
       virtual Rect<int> get_char_rect(int c) const = 0;
       virtual shared_ptr<const Image> get_image() const = 0;
+
+      virtual Size<int> get_size() const {
+         return szChar;
+      }
+
+   private:
+      Size<int> szChar;
    };
 
    class AsciiFont : public Font {
    public:
       AsciiFont(shared_ptr<const Image> image,
-                const Size<int>& szChar) :
-         image(image), szChar(szChar) { }
+                const Size<int>& szChar) : Font(szChar), image(image) { }
+
+      static shared_ptr<AsciiFont> create(shared_ptr<const Image> image,
+                                          const Size<int> szChar) {
+         return make_shared<AsciiFont>(image, szChar);
+      }
 
       shared_ptr<const Image> get_image() const override {
          return image;
       }
 
-      Rect<int> get_char_rect(int c) const {
+      Rect<int> get_char_rect(int c) const override {
          if (c < ASCII_START || c > ASCII_END) {
             throw GraphicsException(tfm::format("AsciiFont can only render characters between %d and %d: %d", ASCII_START, ASCII_END, c));
          }
 
-         return get_image()->get_tile_rect(szChar, c - ASCII_START);
+         return get_image()->get_tile_rect(get_size(), c - ASCII_START);
       }
 
    private:
       shared_ptr<const Image> image;
-      Size<int> szChar;
    };
 
    class Animation {
@@ -225,8 +238,8 @@ namespace lost_levels {
    class AnimatedAsciiFont : public Font {
    public:
       AnimatedAsciiFont(shared_ptr<const Animation> animation,
-                        const Size<int>& szChar) :
-         animation(animation), frameRect(animation->get_size().rect()), szChar(szChar)
+                        const Size<int>& szChar) : Font(szChar),
+         animation(animation), frameRect(animation->get_size().rect())
       { }
 
       shared_ptr<const Image> get_image() const override {
@@ -238,14 +251,15 @@ namespace lost_levels {
             throw GraphicsException(tfm::format("AsciiFont can only render characters between %d and %d: %d", ASCII_START, ASCII_END, c));
          }
 
-         return Rect<int>(animation->get_frame_point() + frameRect.tile_point(szChar, c - ASCII_START).to_vector(),
-                          szChar);
+         return Rect<int>(animation->get_frame_point() +
+                          frameRect.tile_point(
+                             get_size(), c - ASCII_START).to_vector(),
+                          get_size());
       }
 
    private:
       shared_ptr<const Animation> animation;
       Rect<int> frameRect;
-      Size<int> szChar;
    };
 
    class Window {
@@ -257,6 +271,8 @@ namespace lost_levels {
 
       virtual bool is_fullscreen() const = 0;
       virtual void set_fullscreen(bool fullscreen = true) = 0;
+
+      virtual void set_title(const string& title) = 0;
    };
 
    class Renderer {
@@ -300,6 +316,29 @@ namespace lost_levels {
             const Rect<int>& dstRect) {
          render(image, Rect<int>(Point<int>(0, 0), image->get_size()),
                dstRect);
+      }
+
+      virtual void print_string(const Point<int>& pt,
+            shared_ptr<const Font> font, const string& str) {
+         Point<int> ptLineStart = pt;
+         int col = 0;
+
+         Size<int> sz = font->get_size();
+         for (size_t x = 0; x < str.size(); x++) {
+            switch(str[x]) {
+            case '\n':
+               ptLineStart += Vector<int>(0, sz.height);
+               col = 0;
+               break;
+
+            default:
+               render(font->get_image(),
+                  font->get_char_rect(str[x]),
+                  Rect<int>(ptLineStart + Vector<int>(sz.width * col, 0), sz));
+               col++;
+               break;
+            }
+         }
       }
    };
 }

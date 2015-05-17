@@ -80,6 +80,10 @@ namespace lost_levels {
             this->fullscreen = fullscreen;
          }
 
+         void set_title(const string& title) override {
+            SDL_SetWindowTitle(window, title.c_str());
+         }
+
          SDL_Window* get_sdl_window() const {
             return window;
          }

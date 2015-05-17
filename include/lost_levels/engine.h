@@ -145,15 +145,21 @@ namespace lost_levels {
       virtual void update() {
          while (physicsTimer->update()) {
             currentState->update();
+            diag_update();
          }
       }
 
       virtual void paint() {
          if (graphicsTimer->update()) {
+            get_renderer()->clear();
             currentState->paint();
+            diag_paint();
             renderer->display();
          }
       }
+
+      virtual void diag_update() { }
+      virtual void diag_paint() { }
 
       virtual void delay() { }
 

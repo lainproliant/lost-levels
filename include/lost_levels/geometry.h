@@ -392,7 +392,7 @@ namespace lost_levels {
       }
 
       Point<T> tile_point(const Size<T>& szTile, int tileNum) const {
-         const int tilesPerRow = sz.width / szTile.width;
+         int tilesPerRow = sz.width / szTile.width;
          return pt + Vector<T>(
             szTile.width * (tileNum % tilesPerRow),
             szTile.height * (tileNum / tilesPerRow));
