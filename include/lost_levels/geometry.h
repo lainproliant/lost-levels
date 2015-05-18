@@ -94,6 +94,11 @@ namespace lost_levels {
          return (*this) * (1.0 / magnitude());
       }
 
+      /**
+       * Round this vector to the nearest integer values for
+       * each component.  Useful for converting floating point
+       * kinematics to screen coordinates.
+       */
       Vector<int> round() const {
          return Vector<int>(std::round(vx), std::round(vy));
       }
@@ -137,6 +142,12 @@ namespace lost_levels {
       T vx, vy;
    };
 
+   /**
+    * Represents a point.  This can be a screen coordinate, physical
+    * coordinate, or a location in a 2d grid.
+    *
+    * Note that x and y elements are public.
+    */
    template <class T>
    class Point {
    public:
@@ -146,6 +157,11 @@ namespace lost_levels {
       Point() :
          x(0), y(0) { }
 
+      /**
+       * Round this point to the nearest integer values for
+       * each coordinate.  Useful for converting floating point
+       * locations to screen coordinates.
+       */
       Point<int> round() const {
          return Point<int>(std::round(x), std::round(y));
       }
@@ -171,10 +187,17 @@ namespace lost_levels {
          return *this;
       }
 
+      /**
+       * Convert this point into a Vector with components equal to
+       * the distance from the origin (0,0) to this point.
+       */
       Vector<T> to_vector() const {
          return Vector<T>(x, y);
       }
 
+      /**
+       * Find the vector between two points.
+       */
       friend Vector<T> operator-(const Point<T>& p1, const Point<T>& p2) {
          return Vector<T>(p2.x - p1.x, p2.y - p1.y);
       }
@@ -195,6 +218,11 @@ namespace lost_levels {
       T x, y;
    };
 
+   /**
+    * Represents a line or line segment connecting given two points.
+    *
+    * Note that a and b point elements are public.
+    */
    template<class T>
    class Line {
    public:
@@ -215,6 +243,17 @@ namespace lost_levels {
          return ! this->operator==(rhs);
       }
 
+      /**
+       * Determine if this line intersects another line.  Note that this
+       * method treats each line as a continuous function rather than
+       * a line segment.
+       *
+       * @param L the line to check against this line.
+       * @param ip (optional) If specified non-null, the location to store
+       *    the intersection point between this line and L if such an
+       *    intersection point exists.
+       * @return True if the lines intersect, false otherwise.
+       */
       bool intersects(const Line<T>& L, Point<double>* ip = nullptr) const {
          Point<double> s1 = Point<double>(b.x - a.x, b.y - a.y);
          Point<double> s2 = Point<double>(L.b.x - L.a.x, L.b.y - L.a.y);
@@ -240,6 +279,11 @@ namespace lost_levels {
          }
       }
 
+      /**
+       * Orient a point about the given line.  Returns <0 if
+       * the point is to the left of the line, >0 if it is
+       * to the right, and ~0 if it is on the line.
+       */
       double orient_point(const Point<T>& pt) {
          Vector<T> V1 = to_vector();
          Vector<T> V2 = Vector<T>(pt.x - a.x, pt.y - a.y);
@@ -247,10 +291,23 @@ namespace lost_levels {
          return V1.cross_product(V2);
       }
 
+      /**
+       * Determine if the given point lies on the line.
+       */
       bool point_on_line(const Point<T>& pt) const {
          return epsilon_equal(orient_point(pt), 0.0);
       }
 
+      /**
+       * Determine if a particular line segment intersects this line.
+       *
+       * NOTE:
+       * - To determine if two line segments intersect, you will need to
+       *   call this method twice, once with each line, e.g.:
+       *
+       *       if (L1.segment_intersects_line(L2) &&
+       *           L2.segment_intersects_line(L1)) { ... }
+       */
       bool segment_intersects_line(const Line<T>& segment) {
          return (point_on_line(segment.a) ||
                  point_on_line(segment.b) ||
@@ -258,6 +315,9 @@ namespace lost_levels {
                  orient_point(segment.b) < 0));
       }
 
+      /**
+       * Calculate the vector between the two points of this line segment.
+       */
       Vector<T> to_vector() const {
          return Vector<T>(b.x - a.x, b.y - a.y);
       }
@@ -271,6 +331,11 @@ namespace lost_levels {
       Point<T> b;
    };
 
+   /**
+    * Represents the size of an object as its width and height.
+    *
+    * Note that width and height elements are public.
+    */
    template <class T>
    class Size {
    public:
@@ -289,22 +354,39 @@ namespace lost_levels {
          return ! this->operator==(rhs);
       }
 
+      /**
+       * Interpret the width as a vector.
+       */
       Vector<T> x_vector() const {
          return Vector<T>(width, 0);
       }
 
+      /**
+       * Interpret the height as a vector.
+       */
       Vector<T> y_vector() const {
          return Vector<T>(0, height);
       }
 
+      /**
+       * Interpret the width and height as a vector.
+       */
       Vector<T> xy_vector() const {
          return Vector<T>(width, height);
       }
 
+      /**
+       * Round this size to the nearest integer values for
+       * width and height.  Useful for converting floating point
+       * sizes to screen coordinates.
+       */
       Size<int> round() const {
          return Size<int>(std::round(width), std::round(height));
       }
 
+      /**
+       * Interpret this size as a rectangle starting at the origin (0,0).
+       */
       Rect<T> rect() const {
          return Rect<T>(Point<T>(), *this);
       }
@@ -318,6 +400,11 @@ namespace lost_levels {
       T height;
    };
 
+   /**
+    * Represents a rectangle with point and size components.
+    *
+    * Note that pt (Point) and sz (Size) elements are public.
+    */
    template <class T>
    class Rect {
    public:
@@ -331,14 +418,25 @@ namespace lost_levels {
       Rect(T x, T y, T width, T height) :
          Rect(Point<T>(x, y), Size<T>(width, height)) { }
 
+      /**
+       * Move this rectangle to the given point.
+       */
       Rect<T> move(const Point<T>& p) const {
          return Rect<T>(p, sz);
       }
 
+      /**
+       * Translate this rectangle from its current point
+       * by the given vector.
+       */
       Rect<T> translate(const Vector<T>& V) const {
          return move(pt + V);
       }
 
+      /**
+       * Determine if another rectangle intersects (overlaps) this
+       * rectangle.
+       */
       bool intersects(const Rect<T>& R2) const {
          return !
             ((pt.x > R2.pt.x + R2.sz.width) ||
@@ -347,6 +445,10 @@ namespace lost_levels {
              (pt.y + sz.height < R2.pt.y));
       }
 
+      /**
+       * Determine if a particular point is contained within this
+       * rectangle.
+       */
       bool contains(const Point<T>& p) const {
          return p.x >= pt.x &&
                 p.x <= pt.x + sz.width &&
@@ -354,6 +456,11 @@ namespace lost_levels {
                 p.y <= pt.y + sz.height;
       }
 
+      /**
+       * Determine if another rectangle is contained within this
+       * rectangle.  R2 must be fully within this rectangle, no area
+       * of it may be outside.
+       */
       bool contains(const Rect<T>& R2) const {
          return (R2.pt.x >= pt.x &&
                  R2.pt.y >= pt.y &&
@@ -361,6 +468,10 @@ namespace lost_levels {
                 (R2.sz.height + (R2.pt.y - pt.y) <= sz.height));
       }
 
+      /**
+       * Determine if the given line intersects any of the sides
+       * of this rectangle.
+       */
       bool intersects(const Line<T>& L) const {
          if (contains(L.a) || contains(L.b)) {
             return true;
@@ -375,32 +486,65 @@ namespace lost_levels {
          return false;
       }
 
+      /**
+       * Round this rectangle to the nearest integer values for
+       * point and size.  Useful for converting floating point
+       * rectangles to screen coordinates.
+       */
       Rect<int> round() const {
          return Rect<int>(pt.round(), sz.round());
       }
 
+      /**
+       * Return a line segment representing the top of this rectangle.
+       */
       Line<T> top() const {
          return Line<T>(pt, pt + sz.x_vector());
       }
 
+      /**
+       * Return a line segment representing the left side of this rectangle.
+       */
       Line<T> left() const {
          return Line<T>(pt, pt + sz.y_vector());
       }
 
+      /**
+       * Return a line segment representing the bottom of this rectangle.
+       */
       Line<T> bottom() const {
          return Line<T>(pt + sz.y_vector(), pt + sz.xy_vector());
       }
 
+      /**
+       * Return a line segment representing the right side of this rectangle.
+       */
       Line<T> right() const {
          return Line<T>(pt + sz.x_vector(), pt + sz.xy_vector());
       }
 
+      /**
+       * Return a vector of lines for each edge of the rectangle.
+       */
       vector<Line<T>> edges() const {
          return {
             top(), left(), bottom(), right()
          };
       }
 
+      /**
+       * Find the point at which a tile of a given size and index
+       * would be contained in this rectangle.
+       *
+       * NOTE:
+       * - No bounds checks are performed.
+       * - Tiles are assumed to proceed left to right, top to bottom,
+       *   e.g.:
+       *
+       *   0 1 2 3
+       *   4 5 6 7
+       *   8 9 A B
+       */
       Point<T> tile_point(const Size<T>& szTile, int tileNum) const {
          int tilesPerRow = sz.width / szTile.width;
          return pt + Vector<T>(
@@ -408,6 +552,12 @@ namespace lost_levels {
             szTile.height * (tileNum / tilesPerRow));
       }
 
+      /**
+       * Find a tile rectangle of the given size and index
+       * that would be contained in this rectangle.
+       *
+       * See tile_point() docs above for more info.
+       */
       Rect<T> tile_rect(const Size<T>& szTile, int tileNum) const {
          return Rect<T>(tile_point(szTile, tileNum), szTile);
       }
@@ -420,6 +570,10 @@ namespace lost_levels {
          return ! this->operator==(rhs);
       }
 
+      /**
+       * Calculate the minimum sized rectangle which will
+       * contain all of the given points.
+       */
       static Rect<T> minimum_bound(vector<Point<T>> points) {
          T xmin = 0;
          T ymin = 0;
@@ -444,6 +598,10 @@ namespace lost_levels {
             (xmax - xmin), (ymax - ymin));
       }
 
+      /**
+       * Calculate the minimum sized rectangle which will
+       * contain all of the given rectangles.
+       */
       static Rect<T> minimum_bound(vector<Rect<T>> rects) {
          vector<Point<T>> points;
 

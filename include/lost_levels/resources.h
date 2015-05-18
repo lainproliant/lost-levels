@@ -19,12 +19,32 @@ namespace lost_levels {
       using Exception::Exception;
    };
 
+   /**
+    * An object for managing and sharing resources in a game.
+    *
+    * USAGE:
+    * - Create an instance of the ResourceManager and share it
+    *   appropriately across components of your game.  Use it to manage
+    *   the lifespan and availability of shared resources such as images,
+    *   animations, and sounds.  You can create one for the entire game,
+    *   or load one for each level or screen.
+    * - Load the resource manager by pointing it to one or more resource
+    *   files.
+    * - Use the resources, referring to them with names defined in the
+    *   resource file(s).
+    */
    class ResourceManager {
    public:
       ResourceManager(shared_ptr<Timer<unsigned int>> timer,
                       shared_ptr<Renderer> renderer) :
          timer(timer), renderer(renderer) { }
 
+      /**
+       * Load resources defined in the resource file at the given location.
+       *
+       * This method can throw ResourceException if something goes wrong
+       * while loading the resource file.
+       */
       void load_file(const string& filename) {
          try {
             Settings settings = Settings::load_from_file(filename);
@@ -44,6 +64,12 @@ namespace lost_levels {
          }
       }
 
+      /**
+       * Get an image resource with the specified name.
+       *
+       * @throws ResourceException if the resource of the specified name
+       *    was not provided.
+       */
       shared_ptr<Image> get_image(const string& name) const {
          auto iter = image_resources.find(name);
          if (iter != image_resources.end()) {
@@ -55,6 +81,12 @@ namespace lost_levels {
          }
       }
 
+      /**
+       * Get an animation resource with the specified name.
+       *
+       * @throws ResourceException if the resource of the specified name
+       *    was not provided.
+       */
       shared_ptr<Animation> get_animation(const string& name) const {
          auto iter = anim_resources.find(name);
          if (iter != anim_resources.end()) {
@@ -66,6 +98,14 @@ namespace lost_levels {
          }
       }
 
+      /**
+       * Share an image resource of the specified name.  This can be used
+       * to generate image resources at runtime and share them with
+       * other parts of the game.
+       *
+       * @throws ResourceException if a resource of the specified name
+       *    is already defined.
+       */
       void share_image(const string& name, shared_ptr<Image> image) {
          if (image_resources.find(name) != image_resources.end()) {
             throw ResourceException(tfm::format(
@@ -73,6 +113,38 @@ namespace lost_levels {
          }
 
          image_resources.insert({name, image});
+      }
+
+      /**
+       * Share an animation resource of the specified name.  This can be used
+       * to generate animation resources at runtime and share them with
+       * other parts of the game.
+       *
+       * @throws ResourceException if a resource of the specified name
+       *    is already defined.
+       */
+      void share_animation(const string& name, shared_ptr<Animation> anim) {
+        if (anim_resources.find(name) != anim_resources.end()) {
+            throw ResourceException(tfm::format(
+               "Duplicate animation resource name: '%s'", name));
+        }
+
+        anim_resources.insert({name, anim});
+      }
+
+      /**
+       * Update all of the loaded animations.  This can be used to
+       * synchronize animations across the game.
+       *
+       * NOTE:
+       * - To allow an object to own its own animation, e.g. have it update
+       *   out of sync with other objects using the same animation, create
+       *   a copy of the animation via Animation::copy().
+       */
+      void update_animations() {
+         for (auto& kv : anim_resources) {
+            kv.second->update();
+         }
       }
 
    protected:

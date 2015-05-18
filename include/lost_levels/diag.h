@@ -12,7 +12,17 @@ namespace lost_levels {
    using namespace std;
 
    /**
+    * FrameCalculator <concrete class>
+    *
     * Calculate and report FPS metrics.
+    *
+    * USAGE:
+    * - Construct the FrameCalculator with a timer that fires every second
+    *   (the monitor_timer) and a timer to be monitored (the monitoring_timer).
+    * - Call update() regularly to update the FPS metric.
+    * - Call get_fps() to get the FPS metric.  If the FPS metric has not yet
+    *   been calculated, the number of frames passed on the monitoring_timer
+    *   will be returned.
     */
    template<class T>
    class FrameCalculator {
