@@ -313,11 +313,19 @@ namespace lost_levels {
             const Point<int>& scrollPos,
             const Rect<int>& srcRect,
             const Rect<int>& dstRect) {
-
+         
          Point<int> relativePos = Point<int>(
                -(scrollPos.x % srcRect.sz.width),
                -(scrollPos.y % srcRect.sz.height)) + dstRect.pt.to_vector();
 
+         if (relativePos.x > 0) {
+            relativePos.x -= srcRect.sz.width;
+         }
+
+         if (relativePos.y > 0) {
+            relativePos.y -= srcRect.sz.height;
+         }
+         
          Point<int> terminalPoint = dstRect.pt + Vector<int>(
                dstRect.sz.width, dstRect.sz.height);
 
@@ -332,12 +340,27 @@ namespace lost_levels {
          clear_clip_rect();
       }
 
+      virtual void render_pattern(shared_ptr<const lost_levels::Image> image,
+            const Point<int>& scrollPos,
+            const Rect<int>& srcRect) {
+         render_pattern(image, scrollPos, srcRect, Rect<int>(Point<int>(), get_logical_size()));
+      }
+
       virtual void render_pattern(shared_ptr<const lost_levels::Animation> animation,
             const Point<int>& scrollPos,
             const Rect<int>& dstRect) {
 
          render_pattern(animation->get_image(), scrollPos,
                animation->get_frame_rect(), dstRect);
+      }
+
+      virtual void render_pattern(shared_ptr<const lost_levels::Animation> animation,
+            const Point<int>& scrollPos) {
+         render_pattern(animation, scrollPos, Rect<int>(Point<int>(), get_logical_size()));
+      }
+
+      virtual void render_pattern(shared_ptr<const lost_levels::Animation> animation) {
+         render_pattern(animation, Point<int>());
       }
 
       virtual void print_string(const Point<int>& pt,

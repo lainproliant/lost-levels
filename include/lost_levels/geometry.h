@@ -107,6 +107,16 @@ namespace lost_levels {
          return ! this->operator==(rhs);
       }
 
+      Vector<T> operator+=(const Vector<T>& rhs) {
+         (*this) = (*this) + rhs;
+         return (*this);
+      }
+
+      Vector<T> operator-=(const Vector<T>& rhs) {
+         (*this) = (*this) - rhs;
+         return (*this);
+      }
+
       friend Vector<T> operator+(const Vector<T>& A, const Vector<T>& B) {
          return Vector<T>(A.vx + B.vx, A.vy + B.vy);
       }

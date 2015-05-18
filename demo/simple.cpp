@@ -59,7 +59,8 @@ public:
       diagTimer = sdl2::create_timer(5000);
       diagTimer->start();
       
-      background = rm.get_image("seattle");
+      background = rm.get_animation("stars");
+      background->start();
    }
 
    void remove_block(int num = 1) {
@@ -139,7 +140,8 @@ public:
          tfm::format(cout, "backgroundVelocity = %s\n", backgroundVelocity);
          tfm::format(cout, "backgroundPosition = %s\n", backgroundPosition);
       }
-
+      
+      background->update();
       backgroundPosition += backgroundVelocity;
 
       for (auto b : blocks) {
@@ -151,7 +153,6 @@ public:
       auto renderer = engine.get_renderer();
 
       renderer->render_pattern(background, backgroundPosition.round(),
-         Rect<int>(Point<int>(), background->get_size()),
          Rect<int>(Point<int>(),
                    Size<int>(LOGICAL_SIZE.width, background->get_size().height)));
 
@@ -161,7 +162,7 @@ public:
    }
 
 private:
-   shared_ptr<Image> background;
+   shared_ptr<Animation> background;
    Point<float> backgroundPosition;
    shared_ptr<Timer<uint32_t>> diagTimer;
    vector<shared_ptr<Block>> blocks;
