@@ -137,6 +137,14 @@ namespace lost_levels {
                   color.r, color.g, color.b, color.a);
          }
 
+         void set_clip_rect(const Rect<int>& rect) override {
+            SDL_RenderSetClipRect(renderer, (SDL_Rect*)&rect);
+         }
+
+         void clear_clip_rect() override {
+            SDL_RenderSetClipRect(renderer, nullptr);
+         }
+
          Size<int> get_logical_size() const override {
             Size<int> sz;
             SDL_RenderGetLogicalSize(renderer, &sz.width, &sz.height);

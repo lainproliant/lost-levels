@@ -145,17 +145,6 @@ namespace lost_levels {
          }
 
          const Size<int>& sz = image->get_size();
-         if (sz.width % szFrame.width != 0) {
-            throw GraphicsException(tfm::format(
-               "Image width %d is not a multiple of frame width %d.",
-               sz.width, szFrame.width));
-         }
-
-         if (sz.height % szFrame.height != 0) {
-            throw GraphicsException(tfm::format(
-               "Image height %d is not a multiple of frame height %d.",
-               sz.height, szFrame.height));
-         }
 
          return shared_ptr<Animation>(new Animation(
             image, szFrame, frames, timer, looping));
@@ -285,13 +274,15 @@ namespace lost_levels {
       virtual void display() = 0;
 
       virtual void set_draw_color(const Color& color) = 0;
+      virtual void set_clip_rect(const Rect<int>& rect) = 0;
+      virtual void clear_clip_rect() = 0;
 
       virtual Size<int> get_logical_size() const = 0;
       virtual void set_logical_size(const Size<int>& sz) = 0;
 
       virtual void render(shared_ptr<const Image> image,
-         const Rect<int>& srcRect,
-         const Rect<int>& dstRect) = 0;
+            const Rect<int>& srcRect,
+            const Rect<int>& dstRect) = 0;
 
       virtual void render(shared_ptr<const Animation> animation,
             const Point<int>& pt) {
@@ -316,6 +307,37 @@ namespace lost_levels {
             const Rect<int>& dstRect) {
          render(image, Rect<int>(Point<int>(0, 0), image->get_size()),
                dstRect);
+      }
+
+      virtual void render_pattern(shared_ptr<const lost_levels::Image> image,
+            const Point<int>& scrollPos,
+            const Rect<int>& srcRect,
+            const Rect<int>& dstRect) {
+
+         Point<int> relativePos = Point<int>(
+               -(scrollPos.x % srcRect.sz.width),
+               -(scrollPos.y % srcRect.sz.height)) + dstRect.pt.to_vector();
+
+         Point<int> terminalPoint = dstRect.pt + Vector<int>(
+               dstRect.sz.width, dstRect.sz.height);
+
+         set_clip_rect(dstRect);
+
+         for (int y = relativePos.y; y < terminalPoint.y; y += srcRect.sz.height) {
+            for (int x = relativePos.x; x < terminalPoint.x; x += srcRect.sz.width) {
+               render(image, srcRect, Rect<int>(Point<int>(x, y), srcRect.sz));
+            }
+         }
+
+         clear_clip_rect();
+      }
+
+      virtual void render_pattern(shared_ptr<const lost_levels::Animation> animation,
+            const Point<int>& scrollPos,
+            const Rect<int>& dstRect) {
+
+         render_pattern(animation->get_image(), scrollPos,
+               animation->get_frame_rect(), dstRect);
       }
 
       virtual void print_string(const Point<int>& pt,

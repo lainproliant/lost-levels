@@ -53,10 +53,13 @@ private:
 
 class InitialState : public State {
 public:
-   InitialState(Engine& engine, const ResourceManager& rm) : State(engine), rm(rm) { }
+   InitialState(Engine& engine, const ResourceManager& rm) :
+      State(engine), rm(rm), backgroundVelocity(Vector<float>(0.25, 0)) { }
    void initialize() override {
       diagTimer = sdl2::create_timer(5000);
       diagTimer->start();
+      
+      background = rm.get_image("seattle");
    }
 
    void remove_block(int num = 1) {
@@ -112,6 +115,14 @@ public:
             case SDL_SCANCODE_Q:
                engine.pop_state();
                break;
+
+            case SDL_SCANCODE_J:
+               backgroundVelocity -= Vector<float>(0.25, 0.00);
+               break;
+
+            case SDL_SCANCODE_K:
+               backgroundVelocity += Vector<float>(0.25, 0.00);
+               break;
             }
 
             break;
@@ -125,7 +136,11 @@ public:
          double fps = (double)(graphicsFrames - prevGraphicsFrames) / 5.0;
          prevGraphicsFrames = graphicsFrames;
          tfm::format(cout, "FPS: %f, Sprites: %d\n", fps, blocks.size());
+         tfm::format(cout, "backgroundVelocity = %s\n", backgroundVelocity);
+         tfm::format(cout, "backgroundPosition = %s\n", backgroundPosition);
       }
+
+      backgroundPosition += backgroundVelocity;
 
       for (auto b : blocks) {
          b->update();
@@ -135,17 +150,25 @@ public:
    void paint() override {
       auto renderer = engine.get_renderer();
 
+      renderer->render_pattern(background, backgroundPosition.round(),
+         Rect<int>(Point<int>(), background->get_size()),
+         Rect<int>(Point<int>(),
+                   Size<int>(LOGICAL_SIZE.width, background->get_size().height)));
+
       for (auto b : blocks) {
          renderer->render(b->get_animation(), b->get_location().round());
       }
    }
 
 private:
+   shared_ptr<Image> background;
+   Point<float> backgroundPosition;
    shared_ptr<Timer<uint32_t>> diagTimer;
    vector<shared_ptr<Block>> blocks;
    uint32_t prevGraphicsFrames = 0;
 
    const ResourceManager& rm;
+   Vector<float> backgroundVelocity;
 };
 
 class DemoEngine : public Engine {

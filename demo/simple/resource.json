@@ -1,6 +1,7 @@
 {
    "images": [
-      {"name": "question-block", "file": "question-block.png"}
+      {"name": "question-block", "file": "question-block.png"},
+      {"name": "seattle", "file": "seattle.png"}
    ],
    "animations": [
       {"name": "question-block", "image": "question-block",

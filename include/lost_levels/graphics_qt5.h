@@ -87,6 +87,15 @@ namespace lost_levels {
                                  color.b, color.a);
           }
 
+          void set_clip_rect(const Rect<int>& rect) override {
+              painter.setClipRect(
+                    QRect(rect.pt.x, rect.pt.y, rect.sz.width, rect.sz.height));
+          }
+
+          void clear_clip_rect() override {
+              painter.setClipping(false);
+          }
+
           Size<int> get_logical_size() const override {
               return rect.sz;
           }
