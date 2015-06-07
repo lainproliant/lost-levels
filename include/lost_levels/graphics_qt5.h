@@ -111,5 +111,19 @@ namespace lost_levels {
           QRect qrect;
           Rect<int> rect;
       };
+
+      class ImageLoader : public lost_levels::ImageLoader {
+      public:
+         ImageLoader() { }
+
+         shared_ptr<lost_levels::Image> load_image(const string& filename) const override {
+             QImage image = QImage(filename);
+             if (image.isNull()) {
+                 throw GraphicsException(tfm::format("Failed to load image from file '%s'.", filename));
+             }
+
+             return make_shared<lost_levels::Image>(new Image(image));
+         }
+      };
    }
 }

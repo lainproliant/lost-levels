@@ -58,8 +58,8 @@ public:
    void initialize() override {
       diagTimer = sdl2::create_timer(5000);
       diagTimer->start();
-      
-      background = rm.get_animation("stars");
+
+      background = rm.get<Animation>("stars");
       background->start();
    }
 
@@ -78,7 +78,7 @@ public:
 
          blocks.push_back(make_shared<Block>(
             location, velocity,
-            rm.get_animation("question-block")->copy()));
+            rm.get<Animation>("question-block")->copy()));
       }
    }
 
@@ -140,7 +140,7 @@ public:
          tfm::format(cout, "backgroundVelocity = %s\n", backgroundVelocity);
          tfm::format(cout, "backgroundPosition = %s\n", backgroundPosition);
       }
-      
+
       background->update();
       backgroundPosition += backgroundVelocity;
 
@@ -185,8 +185,8 @@ public:
       get_renderer()->set_logical_size(LOGICAL_SIZE);
       get_renderer()->set_draw_color(CLEAR_COLOR);
 
-      rm = make_shared<ResourceManager>(
-            get_physics_timer(), get_renderer());
+      rm = make_shared<ResourceManager>(get_physics_timer(),
+            sdl2::create_image_loader(get_renderer()));
       rm->load_file("simple/resource.json");
 
       push_state<InitialState>(*rm);

@@ -9,6 +9,7 @@
 #include "lain/settings.h"
 #include "lost_levels/geometry.h"
 #include "lost_levels/timer.h"
+#include "lost_levels/resource_base.h"
 
 namespace lost_levels {
    using namespace std;
@@ -36,7 +37,7 @@ namespace lost_levels {
       uint8_t r, g, b, a;
    };
 
-   class Image {
+   class Image : public ResourceImpl<Resource::Type::IMAGE> {
    public:
       Image(const Rect<int>& rect) : rect(rect) { }
 
@@ -74,7 +75,7 @@ namespace lost_levels {
       Size<int> szChar;
    };
 
-   class AsciiFont : public Font {
+   class AsciiFont : public Font, public ResourceImpl<Resource::Type::FONT> {
    public:
       AsciiFont(shared_ptr<const Image> image,
                 const Size<int>& szChar) : Font(szChar), image(image) { }
@@ -100,7 +101,7 @@ namespace lost_levels {
       shared_ptr<const Image> image;
    };
 
-   class Animation {
+   class Animation : public ResourceImpl<Resource::Type::ANIMATION> {
    public:
       class Frame {
       public:
@@ -143,8 +144,6 @@ namespace lost_levels {
          if (frames.size() < 1) {
             throw GraphicsException("Animation must have at least 1 frame.");
          }
-
-         const Size<int>& sz = image->get_size();
 
          return shared_ptr<Animation>(new Animation(
             image, szFrame, frames, timer, looping));
@@ -224,7 +223,7 @@ namespace lost_levels {
       unsigned int currentFrame = 0;
    };
 
-   class AnimatedAsciiFont : public Font {
+   class AnimatedAsciiFont : public Font, public ResourceImpl<Resource::Type::ANIMATED_FONT> {
    public:
       AnimatedAsciiFont(shared_ptr<const Animation> animation,
                         const Size<int>& szChar) : Font(szChar),
@@ -249,6 +248,12 @@ namespace lost_levels {
    private:
       shared_ptr<const Animation> animation;
       Rect<int> frameRect;
+   };
+
+   class ImageLoader {
+   public:
+      virtual ~ImageLoader() { }
+      virtual shared_ptr<Image> load_image(const string& filename) const = 0;
    };
 
    class Window {
@@ -313,7 +318,7 @@ namespace lost_levels {
             const Point<int>& scrollPos,
             const Rect<int>& srcRect,
             const Rect<int>& dstRect) {
-         
+
          Point<int> relativePos = Point<int>(
                -(scrollPos.x % srcRect.sz.width),
                -(scrollPos.y % srcRect.sz.height)) + dstRect.pt.to_vector();
@@ -325,7 +330,7 @@ namespace lost_levels {
          if (relativePos.y > 0) {
             relativePos.y -= srcRect.sz.height;
          }
-         
+
          Point<int> terminalPoint = dstRect.pt + Vector<int>(
                dstRect.sz.width, dstRect.sz.height);
 

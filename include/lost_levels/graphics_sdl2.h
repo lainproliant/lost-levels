@@ -12,6 +12,8 @@ namespace lost_levels {
    using namespace std;
 
    namespace sdl2 {
+      class ImageLoader;
+
       inline Size<int> get_texture_size(SDL_Texture* texture) {
          Size<int> sz;
          SDL_QueryTexture(texture, nullptr, nullptr,
@@ -95,6 +97,8 @@ namespace lost_levels {
       };
 
       class Renderer : public lost_levels::Renderer {
+         friend class ImageLoader;
+
       public:
          Renderer(SDL_Renderer* renderer) :
             renderer(renderer) { }
@@ -159,6 +163,25 @@ namespace lost_levels {
          SDL_Renderer* renderer;
       };
 
+      class ImageLoader : public lost_levels::ImageLoader {
+      public:
+         ImageLoader(shared_ptr<Renderer> renderer) : renderer(renderer) { }
+
+         shared_ptr<lost_levels::Image> load_image(const string& filename) const override {
+            SDL_Texture* texture = IMG_LoadTexture(renderer->renderer, filename.c_str());
+
+            if (texture == nullptr) {
+               throw GraphicsException(tfm::format("Failed to load image from file '%s': %s",
+                  filename, string(SDL_GetError())));
+            }
+
+            return shared_ptr<lost_levels::Image>(new Image(texture));
+         }
+
+      private:
+         shared_ptr<Renderer> renderer;
+      };
+
       inline shared_ptr<lost_levels::Window> create_window(
             const Size<int>& sz = Window::default_size(),
             Uint32 flags = SDL_WINDOW_SHOWN) {
@@ -196,6 +219,16 @@ namespace lost_levels {
 
          return shared_ptr<lost_levels::Renderer>(
             new Renderer(renderer));
+      }
+
+      inline shared_ptr<lost_levels::ImageLoader> create_image_loader(
+            shared_ptr<lost_levels::Renderer> rendererIn) {
+         shared_ptr<Renderer> renderer = dynamic_pointer_cast<Renderer>(rendererIn);
+         if (renderer == nullptr) {
+            throw GraphicsException("sdl2::ImageLoader requires an sdl2::ImageLoader");
+         }
+
+         return shared_ptr<lost_levels::ImageLoader>(new ImageLoader(renderer));
       }
    }
 }
