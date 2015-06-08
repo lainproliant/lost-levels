@@ -1,6 +1,7 @@
 #include "lost_levels/engine.h"
 #include "lost_levels/graphics_sdl2.h"
 #include "lost_levels/timer_sdl2.h"
+#include "lost_levels/diag.h"
 
 #pragma clang diagnostic ignored "-Wswitch"
 
@@ -8,8 +9,8 @@ using namespace std;
 using namespace lain;
 using namespace lost_levels;
 
-const Size<int> WINDOW_SIZE = Size<int>(960, 540);
-const Size<int> LOGICAL_SIZE = Size<int>(480, 270);
+const Size<int> WINDOW_SIZE = Size<int>(2560, 1440);
+const Size<int> LOGICAL_SIZE = Size<int>(1280, 720);
 const Size<int> BLOCK_SIZE = Size<int>(16, 16);
 const Color CLEAR_COLOR = Color(0, 0, 0);
 
@@ -54,11 +55,15 @@ private:
 class InitialState : public State {
 public:
    InitialState(Engine& engine, const ResourceManager& rm) :
-      State(engine), rm(rm), backgroundVelocity(Vector<float>(0.25, 0)) { }
+      State(engine), rm(rm), backgroundVelocity(Vector<float>(0.25, 0)),
+      frameCalculator(sdl2::create_frame_calculator(engine.get_graphics_timer())) { }
+
    void initialize() override {
       diagTimer = sdl2::create_timer(5000);
       diagTimer->start();
-
+      
+      statusFont = ImageFont::create(rm.get<Image>("font"), Size<int>(7, 8));
+      statusFont->set_start_char('!');
       background = rm.get<Animation>("stars");
       background->start();
    }
@@ -147,6 +152,8 @@ public:
       for (auto b : blocks) {
          b->update();
       }
+
+      frameCalculator->update();
    }
 
    void paint() override {
@@ -159,17 +166,23 @@ public:
       for (auto b : blocks) {
          renderer->render(b->get_animation(), b->get_location().round());
       }
+
+      renderer->print_string(Point<int>(0, LOGICAL_SIZE.height - statusFont->get_size().height * 2),
+                             statusFont,
+                             tfm::format("Sprites: %d\nFPS: %d", blocks.size(), frameCalculator->get_fps()));
    }
 
 private:
+   shared_ptr<Font> statusFont;
    shared_ptr<Animation> background;
    Point<float> backgroundPosition;
    shared_ptr<Timer<uint32_t>> diagTimer;
    vector<shared_ptr<Block>> blocks;
    uint32_t prevGraphicsFrames = 0;
-
+   
    const ResourceManager& rm;
    Vector<float> backgroundVelocity;
+   shared_ptr<FrameCalculator<uint32_t>> frameCalculator;
 };
 
 class DemoEngine : public Engine {
@@ -184,6 +197,8 @@ public:
 
       get_renderer()->set_logical_size(LOGICAL_SIZE);
       get_renderer()->set_draw_color(CLEAR_COLOR);
+
+      get_window()->set_fullscreen(true);
 
       rm = make_shared<ResourceManager>(get_physics_timer(),
             sdl2::create_image_loader(get_renderer()));

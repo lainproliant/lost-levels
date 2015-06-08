@@ -2,7 +2,8 @@
    "images": [
       {"name": "question-block", "file": "question-block.png"},
       {"name": "seattle", "file": "seattle.png"},
-      {"name": "stars", "file": "stars.png"}
+      {"name": "stars", "file": "stars.png"},
+      {"name": "font", "file": "Apple2e.png"}
    ],
    "animations": [
       {"name": "question-block", "image": "question-block",
