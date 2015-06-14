@@ -19,65 +19,6 @@ namespace lost_levels {
       return tfm::format("%s:%s", name, rc_type_to_string(rcType));
    }
 
-   class ResourceException : public Exception {
-   public:
-      using Exception::Exception;
-   };
-
-   class BlockData {
-   public:
-      BlockData(int blocksetId, int blockId) :
-         set(blocksetId), id(blockId) { }
-
-      static BlockData parse(const string& blockDataExpr) {
-         vector<string> tuple;
-         str::split(tuple, blockDataExpr, ",");
-
-         if (tuple.size() != 2) {
-            throw ResourceException(tfm::format(
-                     "Invalid BlockData expression: '%s'", blockDataExpr));
-         }
-
-         try {
-            return BlockData(stoi(tuple[0]), stoi(tuple[1]));
-
-         } catch (const invalid_argument& e) {
-            throw ResourceException(tfm::format(
-                     "Invalid BlockData expression (non-numeric): '%s'", blockDataExpr));
-         }
-      }
-
-      string to_string() const {
-         return tfm::format("%d,%d", set, id);
-      }
-
-      int set;
-      int id;
-   };
-
-   class LevelData : public ResourceImpl<Resource::Type::LEVEL_DATA> {
-   public:
-      LevelData(vector<BlockData> blocks, Size<int> levelSize) :
-         blocks(blocks), levelSize(levelSize) {
-
-         assert(levelSize.width * levelSize.height == blocks.size());
-      }
-
-      const BlockData& get_block(Point<int> pt) {
-         size_t offset = pt.y * levelSize.width + pt.x;
-         assert(offset >= blocks.size());
-         return blocks[offset];
-      }
-
-      const Size<int>& get_level_size() const {
-         return levelSize;
-      }
-
-   private:
-      vector<BlockData> blocks;
-      Size<int> levelSize;
-   };
-
    /**
     * An object for managing and sharing resources in a game.
     *
@@ -189,25 +130,6 @@ namespace lost_levels {
             image, sz, frames, timer, looping);
 
          put(name, anim);
-      }
-
-      void load_level_object_array(const vector<Settings>& obj_array) {
-         for (Settings obj : obj_array) {
-            load_level_object(obj);
-         }
-      }
-
-      void load_level_object(const Settings& obj) {
-         vector<BlockData> blocks;
-         Size<int> levelSize;
-         string name = obj.get<string>("name");
-
-         levelSize = Size<int>(obj.get<int>("width"), obj.get<int>("height"));
-         for (string blockExpr : obj.get_array<string>("blocks")) {
-            blocks.push_back(BlockData::parse(blockExpr));
-         }
-
-         put(name, make_shared<LevelData>(blocks, levelSize));
       }
 
    private:

@@ -1,100 +1,72 @@
-/*
- * level: Data structures to represent level data.
+/* 
+ * level: Data structures for representing a level made of layers.
  *
  * Author: Lain Supe (lainproliant)
- * Date: Sunday, May 17 2015
+ * Date: Monday, June 8 2015 (!)
  */
 #pragma once
+#include "resource_base.h"
+#include "lain/string.h"
+#include "tinyformat/tinyformat.h"
 
-#include "geometry.h"
-#include "graphics.h"
+#include <vector>
 
 namespace lost_levels {
    using namespace std;
+   using namespace lain;
 
-   class Layer {
+   class BlockData {
    public:
-      Layer(const Size<int>& sz) : sz(sz) { }
+      BlockData(int blocksetId, int blockId) :
+         set(blocksetId), id(blockId) { }
 
-      virtual void initialize() = 0;
-      virtual void update() = 0;
-      virtual void paint(shared_ptr<Renderer> renderer) const = 0;
+      static BlockData parse(const string& blockDataExpr) {
+         vector<string> tuple;
+         str::split(tuple, blockDataExpr, ",");
 
-      virtual const Size<int>& get_size() const {
-         return sz;
+         if (tuple.size() != 2) {
+            throw ResourceException(tfm::format(
+                     "Invalid BlockData expression: '%s'", blockDataExpr));
+         }
+
+         try {
+            return BlockData(stoi(tuple[0]), stoi(tuple[1]));
+
+         } catch (const invalid_argument& e) {
+            throw ResourceException(tfm::format(
+                     "Invalid BlockData expression (non-numeric): '%s'", blockDataExpr));
+         }
       }
 
-   private:
-      Size<int> sz;
-   };
-
-   class ImageLayer : public Layer {
-   public:
-      ImageLayer(shared_ptr<const Image> image) :
-         Layer(image->get_size()), image(image),
-         position(Point<float>()),
-         scrollVelocity(Vector<float>()) { }
-
-      virtual void initialize() override { }
-
-      virtual void update() override {
-         position += scrollVelocity;
+      string to_string() const {
+         return tfm::format("%d,%d", set, id);
       }
 
-      virtual void paint(shared_ptr<Renderer> renderer) const override {
-         renderer->render_pattern(image, position.round(),
-               Rect<int>(Point<int>(), image->get_size()));
-      }
-
-      void set_position(const Point<float>& pt) {
-         position = pt;
-      }
-
-      void set_scroll_velocity(const Vector<float>& v) {
-         scrollVelocity = v;
-      }
-
-   protected:
-      shared_ptr<const Image> image;
-      Point<float> position;
-      Vector<float> scrollVelocity;
-   };
-
-   class AnimatedImageLayer : public ImageLayer {
-   public:
-      AnimatedImageLayer(shared_ptr<Animation> animation) :
-         ImageLayer(animation->get_image()),
-         animation(animation) { }
-
-      void update() override {
-         ImageLayer::update();
-         animation->update();
-      }
-
-      void paint(shared_ptr<Renderer> renderer) const override {
-         renderer->render_pattern(animation, position.round());
-      }
-
-   private:
-      shared_ptr<Animation> animation;
-   };
-
-   class Block {
-   public:
-      Block(int id, const Point<int> position) :
-         id(id), position(position) { }
-
-      int get_id() const {
-         return id;
-      }
-
-      const Point<int>& get_position() const {
-         return position;
-      }
-
-   private:
+      int set;
       int id;
-      Point<int> position;
    };
-}
 
+   class LevelData : public ResourceImpl<Resource::Type::LEVEL_DATA> {
+   public:
+      LevelData(vector<BlockData> blocks, Size<int> levelSize) :
+         blocks(blocks), levelSize(levelSize) {
+
+         assert(levelSize.width * levelSize.height == blocks.size());
+      }
+
+      const BlockData& get_block(Point<int> pt) {
+         size_t offset = pt.y * levelSize.width + pt.x;
+         assert(offset >= blocks.size());
+         return blocks[offset];
+      }
+
+      const Size<int>& get_level_size() const {
+         return levelSize;
+      }
+
+   private:
+      vector<BlockData> blocks;
+      Size<int> levelSize;
+   };
+
+}

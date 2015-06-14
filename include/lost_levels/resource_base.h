@@ -10,8 +10,16 @@
 #include <string>
 #include <map>
 
+#include "lain/exception.h"
+
 namespace lost_levels {
    using namespace std;
+   using namespace lain;
+
+   class ResourceException : public Exception {
+   public:
+      using Exception::Exception;
+   };
 
    class Resource {
    public:

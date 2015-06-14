@@ -61,7 +61,7 @@ public:
    void initialize() override {
       diagTimer = sdl2::create_timer(5000);
       diagTimer->start();
-      
+
       statusFont = ImageFont::create(rm.get<Image>("font"), Size<int>(7, 8));
       statusFont->set_start_char('!');
       background = rm.get<Animation>("stars");
@@ -179,7 +179,7 @@ private:
    shared_ptr<Timer<uint32_t>> diagTimer;
    vector<shared_ptr<Block>> blocks;
    uint32_t prevGraphicsFrames = 0;
-   
+
    const ResourceManager& rm;
    Vector<float> backgroundVelocity;
    shared_ptr<FrameCalculator<uint32_t>> frameCalculator;
@@ -202,7 +202,7 @@ public:
 
       rm = make_shared<ResourceManager>(get_physics_timer(),
             sdl2::create_image_loader(get_renderer()));
-      rm->load_file("simple/resource.json");
+      rm->load_file("simple-rc/resource.json");
 
       push_state<InitialState>(*rm);
    }

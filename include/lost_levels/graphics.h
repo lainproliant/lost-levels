@@ -15,9 +15,6 @@ namespace lost_levels {
    using namespace std;
    using namespace lain;
 
-   const int ASCII_START = 32;
-   const int ASCII_END = 127;
-
    class Renderer;
 
    class GraphicsException : public Exception {
@@ -64,25 +61,38 @@ namespace lost_levels {
    class Font {
    public:
       Font(Size<int> szChar) : szChar(szChar) { }
-      virtual Rect<int> get_char_rect(int c) const = 0;
+
       virtual shared_ptr<const Image> get_image() const = 0;
 
       virtual Size<int> get_size() const {
          return szChar;
       }
 
+      virtual Rect<int> get_char_rect(int c) const {
+         return get_image()->get_tile_rect(get_size(), c - get_start_char());
+      }
+
+      int get_start_char() const {
+         return startChar;
+      }
+
+      void set_start_char(int startChar) {
+         this->startChar = startChar;
+      }
+
    private:
+      int startChar = 0;
       Size<int> szChar;
    };
 
-   class AsciiFont : public Font, public ResourceImpl<Resource::Type::FONT> {
+   class ImageFont : public Font, public ResourceImpl<Resource::Type::FONT> {
    public:
-      AsciiFont(shared_ptr<const Image> image,
-                const Size<int>& szChar) : Font(szChar), image(image) { }
+      ImageFont(shared_ptr<const Image> image, const Size<int>& szChar) :
+         Font(szChar), image(image) { }
 
-      static shared_ptr<AsciiFont> create(shared_ptr<const Image> image,
+      static shared_ptr<ImageFont> create(shared_ptr<const Image> image,
                                           const Size<int> szChar) {
-         return make_shared<AsciiFont>(image, szChar);
+         return make_shared<ImageFont>(image, szChar);
       }
 
       shared_ptr<const Image> get_image() const override {
@@ -90,11 +100,7 @@ namespace lost_levels {
       }
 
       Rect<int> get_char_rect(int c) const override {
-         if (c < ASCII_START || c > ASCII_END) {
-            throw GraphicsException(tfm::format("AsciiFont can only render characters between %d and %d: %d", ASCII_START, ASCII_END, c));
-         }
-
-         return get_image()->get_tile_rect(get_size(), c - ASCII_START);
+         return get_image()->get_tile_rect(get_size(), c - get_start_char());
       }
 
    private:
@@ -223,26 +229,14 @@ namespace lost_levels {
       unsigned int currentFrame = 0;
    };
 
-   class AnimatedAsciiFont : public Font, public ResourceImpl<Resource::Type::ANIMATED_FONT> {
+   class AnimatedFont : public Font, public ResourceImpl<Resource::Type::ANIMATED_FONT> {
    public:
-      AnimatedAsciiFont(shared_ptr<const Animation> animation,
-                        const Size<int>& szChar) : Font(szChar),
-         animation(animation), frameRect(animation->get_size().rect())
+      AnimatedFont(shared_ptr<const Animation> animation, const Size<int>& szChar) :
+         Font(szChar), animation(animation), frameRect(animation->get_size().rect())
       { }
 
       shared_ptr<const Image> get_image() const override {
          return animation->get_image();
-      }
-
-      Rect<int> get_char_rect(int c) const override {
-         if (c < ASCII_START || c > ASCII_END) {
-            throw GraphicsException(tfm::format("AsciiFont can only render characters between %d and %d: %d", ASCII_START, ASCII_END, c));
-         }
-
-         return Rect<int>(animation->get_frame_point() +
-                          frameRect.tile_point(
-                             get_size(), c - ASCII_START).to_vector(),
-                          get_size());
       }
 
    private:
