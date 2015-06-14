@@ -9,8 +9,8 @@ using namespace std;
 using namespace lain;
 using namespace lost_levels;
 
-const Size<int> WINDOW_SIZE = Size<int>(2560, 1440);
-const Size<int> LOGICAL_SIZE = Size<int>(1280, 720);
+const Size<int> WINDOW_SIZE = Size<int>(640, 360);
+const Size<int> LOGICAL_SIZE = Size<int>(640, 360);
 const Size<int> BLOCK_SIZE = Size<int>(16, 16);
 const Color CLEAR_COLOR = Color(0, 0, 0);
 
@@ -197,8 +197,6 @@ public:
 
       get_renderer()->set_logical_size(LOGICAL_SIZE);
       get_renderer()->set_draw_color(CLEAR_COLOR);
-
-      get_window()->set_fullscreen(true);
 
       rm = make_shared<ResourceManager>(get_physics_timer(),
             sdl2::create_image_loader(get_renderer()));
