@@ -27,7 +27,7 @@ namespace lost_levels {
          AUDIO,
          IMAGE,
          ANIMATION,
-         LEVEL_DATA,
+         BLOCK_MAP,
          FONT,
          ANIMATED_FONT
       };
@@ -57,7 +57,7 @@ namespace lost_levels {
          {Resource::Type::AUDIO,          "Audio"},
          {Resource::Type::IMAGE,          "Image"},
          {Resource::Type::ANIMATION,      "Animation"},
-         {Resource::Type::LEVEL_DATA,     "LevelData"},
+         {Resource::Type::BLOCK_MAP,      "BlockMap"},
          {Resource::Type::FONT,           "Font"},
          {Resource::Type::ANIMATED_FONT,  "AnimatedFont"}};
 

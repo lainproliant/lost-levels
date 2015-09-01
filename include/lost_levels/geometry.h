@@ -6,23 +6,37 @@
  */
 #pragma once
 
+#include <algorithm>
 #include <cfloat>
 #include <cmath>
 #include <iostream>
+#include <limits>
+#include <set>
 #include <vector>
+
+#include "lain/json.h"
 
 namespace lost_levels {
    using namespace std;
+   using namespace lain;
 
    template<class T>
    class Rect;
+   
+   template<class T>
+   class Polygon;
+
+   class GeometryException : public Exception {
+   public:
+      using Exception::Exception;
+   };
 
    /**
     * Determine if the two floats provided are equal within the given
     * epsilon.  Default epsilon is FLT_EPSILON.
     */
    inline bool epsilon_equal(float a, float b, float epsilon = FLT_EPSILON) {
-      return (fabs(a - b) <= epsilon);
+      return (fabs(a - b) < epsilon);
    }
 
    /**
@@ -30,7 +44,7 @@ namespace lost_levels {
     * epsilon.  Default epsilon is DBL_EPSILON.
     */
    inline bool epsilon_equal(double a, double b, double epsilon = DBL_EPSILON) {
-      return (abs(a - b) <= epsilon);
+      return (abs(a - b) < epsilon);
    }
 
    template<class T>
@@ -57,8 +71,7 @@ namespace lost_levels {
     *       - Can be converted to Vector<int> with round().
     */
    template <class T>
-   class Vector {
-   public:
+   class Vector { public:
       Vector() :
          vx(0), vy(0) { }
 
@@ -83,6 +96,13 @@ namespace lost_levels {
 
          return (double)(nA.x) * (double)(nB.y) -
                 (double)(nA.y) * (double)(nB.x);
+      }
+      
+      /**
+       * Calculate the dot product of the given vectors.
+       */
+      double dot_product(const Vector<T>& B) const {
+         return inner_product({vx, vy}, 2, {B.vx, B.vy}, 0);
       }
 
       /**
@@ -120,6 +140,12 @@ namespace lost_levels {
       Vector<T> operator-=(const Vector<T>& rhs) {
          (*this) = (*this) - rhs;
          return (*this);
+      }
+
+      JSON json() const {
+         JSON json;
+         json.set<T>("vx", vx);
+         json.set<T>("vy", vy);
       }
 
       friend Vector<T> operator+(const Vector<T>& A, const Vector<T>& B) {
@@ -193,6 +219,13 @@ namespace lost_levels {
        */
       Vector<T> to_vector() const {
          return Vector<T>(x, y);
+      }
+
+      JSON json() const {
+         JSON json;
+         json.set<T>("x", x);
+         json.set<T>("y", y);
+         return json;
       }
 
       /**
@@ -322,6 +355,13 @@ namespace lost_levels {
          return Vector<T>(b.x - a.x, b.y - a.y);
       }
 
+      JSON json() const {
+         JSON json;
+         json.set_object("a", a.json());
+         json.set_object("b", b.json());
+         return json;
+      }
+
       friend ostream& operator<<(ostream& out, const Line<T>& L) {
          out << "Line(" << L.a << ", " << L.b << ")";
          return out;
@@ -390,6 +430,13 @@ namespace lost_levels {
       Rect<T> rect() const {
          return Rect<T>(Point<T>(), *this);
       }
+      
+      JSON json() const {
+         JSON json;
+         json.set<T>("width", width);
+         json.set<T>("height", height);
+         return json;
+      }
 
       friend ostream& operator<<(ostream& out, const Size<T>& sz) {
          out << "Size(" << sz.width << " x " << sz.height << ")";
@@ -398,6 +445,17 @@ namespace lost_levels {
 
       T width;
       T height;
+   };
+   
+   /**
+    * An enumeration of the sides of an axis-aligned rectangle.
+    */
+   enum RectSide {
+      TOP      = 0,
+      RIGHT    = 1,
+      BOTTOM   = 2,
+      LEFT     = 3,
+      NONE     = 4
    };
 
    /**
@@ -438,11 +496,42 @@ namespace lost_levels {
        * rectangle.
        */
       bool intersects(const Rect<T>& R2) const {
+         return collide_minowski(R2) != NONE;
+         /* 
          return !
             ((pt.x > R2.pt.x + R2.sz.width) ||
              (pt.x + sz.width < R2.pt.x) ||
              (pt.y > R2.pt.y + R2.sz.height) ||
              (pt.y + sz.height < R2.pt.y));
+         */
+      }
+      
+      /**
+       * Determine the direction of collision if two rectangles
+       * overlap by calculating the Minowski sum of the two
+       * rectangles.  If the rectangles do not overlap,
+       * RectSide.NONE is returned (check for it!)
+       */
+      RectSide collide_minowski(const Rect<T>& R2) const {
+         Point<T> centerA = center(),
+                  centerB = R2.center();
+         float w  = (sz.width + R2.sz.width) / ((T) 2),
+               h  = (sz.height + R2.sz.height) / ((T) 2),
+               dx = centerA.x - centerB.x,
+               dy = centerA.y - centerB.y;
+
+         if (abs(dx) <= w && abs(dy) <= h) {
+            float wy = w * dy;
+            float hx = h * dx;
+            
+            if (wy > hx) {
+               return wy > -hx ? TOP : LEFT;
+            } else {
+               return wy > -hx ? RIGHT : BOTTOM;
+            }
+         } else {
+            return NONE;
+         }
       }
 
       /**
@@ -496,42 +585,77 @@ namespace lost_levels {
       }
 
       /**
-       * Return a line segment representing the top of this rectangle.
+       * Split this rectangle into four equally sized rectangles.
+       * This can be used to separate a rectangle into four quadrants,
+       * in the following form:
+       *
+       *    I  | II
+       *       |
+       *    ---|---
+       *    IV | III 
+       *       |
        */
-      Line<T> top() const {
-         return Line<T>(pt, pt + sz.x_vector());
+      vector<Rect<T>> split() const {
+         vector<Rect<T>> subRects;
+         Size<T> newSize = Size<T>(sz.width / 2, sz.height / 2);
+         vector<Point<T>> points = {
+            Point<T>(pt),
+            Point<T>(pt.x + newSize.width, pt.y),
+            Point<T>(pt.x + newSize.width, pt.y + newSize.height),
+            Point<T>(pt.x, pt.y + newSize.height)
+         };
+         for (auto pt : points) {
+            subRects.push_back(Rect<T>(pt, newSize));
+         }
+         return subRects;
       }
-
+      
       /**
-       * Return a line segment representing the left side of this rectangle.
+       * Return the points of the four corners of the rectangle,
+       * in the following order:
+       *
+       *    0__1 
+       *    |__|
+       *    3  2 
        */
-      Line<T> left() const {
-         return Line<T>(pt, pt + sz.y_vector());
-      }
-
-      /**
-       * Return a line segment representing the bottom of this rectangle.
-       */
-      Line<T> bottom() const {
-         return Line<T>(pt + sz.y_vector(), pt + sz.xy_vector());
-      }
-
-      /**
-       * Return a line segment representing the right side of this rectangle.
-       */
-      Line<T> right() const {
-         return Line<T>(pt + sz.x_vector(), pt + sz.xy_vector());
-      }
-
-      /**
-       * Return a vector of lines for each edge of the rectangle.
-       */
-      vector<Line<T>> edges() const {
-         return {
-            top(), left(), bottom(), right()
+      vector<Point<T>> corners() const {
+         return { 
+            Point<T>(pt),
+            Point<T>(pt.x + sz.width, pt.y),
+            Point<T>(pt.x + sz.width, pt.y + sz.height),
+            Point<T>(pt.x, pt.y + sz.height)
          };
       }
+      
+      /**
+       * Return the center point of the rectangle.  This is the
+       * average of all points along the edges, and is also 
+       * known as the 'centroid' of the polygon.
+       */
+      Point<T> center() const {
+         return pt + Vector<T>(sz.width / 2, sz.height / 2);
+      }
 
+      /**
+       * Return the lines of the rectangle, in the following order:
+       * 
+       *       0
+       *     _____
+       *    |     |
+       *  3 |     | 1
+       *    |_____|
+       *       2
+       */
+      vector<Line<T>> edges() const {
+         vector<Point<T>> points = corners();
+         return {
+            Line<T>(points[0], points[1]),
+            Line<T>(points[1], points[2]),
+            Line<T>(points[2], points[3]),
+            Line<T>(points[3], points[0])
+         };
+      }
+      
       /**
        * Find the point at which a tile of a given size and index
        * would be contained in this rectangle.
@@ -544,6 +668,7 @@ namespace lost_levels {
        *   0 1 2 3
        *   4 5 6 7
        *   8 9 A B
+       *   C D E F
        */
       Point<T> tile_point(const Size<T>& szTile, int tileNum) const {
          int tilesPerRow = sz.width / szTile.width;
@@ -570,15 +695,19 @@ namespace lost_levels {
          return ! this->operator==(rhs);
       }
 
+      JSON json() const {
+         JSON json;
+         json.set_object("pt", pt.json());
+         json.set_object("sz", sz.json());
+         return json;
+      }
+
       /**
        * Calculate the minimum sized rectangle which will
        * contain all of the given points.
        */
       static Rect<T> minimum_bound(vector<Point<T>> points) {
-         T xmin = 0;
-         T ymin = 0;
-         T xmax = 0;
-         T ymax = 0;
+         T xmin = 0, ymin = 0, xmax = 0, ymax = 0;
 
          for (auto pt : points) {
             if (pt.x < xmin) {
@@ -621,5 +750,218 @@ namespace lost_levels {
       Point<T> pt;
       Size<T> sz;
    };
+
+   template<class T>
+   class Polygon {
+   public:
+      class Projection {
+      public:
+         Projection(double min, double max) :
+            min(min), max(max)
+         { }
+
+         friend double operator-(const Projection& projA, const Projection& projB) {
+            if (projA.min < projB.min) {
+               return projB.min - projA.max;
+            } else {
+               return projA.min - projB.max;
+            }
+         }
+
+         double min, max;
+      };
+
+      class CollisionResult {
+      public:
+         bool will_intersect;
+         bool are_intersecting;
+         Vector<T> min_trans_v;
+      };
+
+      Polygon(const vector<Point<T>>& points) :
+         pts(points)
+      { }
+      
+      /**
+       * Project the polygon across the given axis, reporting back the
+       * min and max coordinates relative to the projection axis.
+       */
+      Projection project(const Vector<T>& axis) {
+         float dp = axis.dot_product(pts[0].to_vector());
+         Projection proj(dp, dp);
+
+         for (auto pt : pts) {
+            dp = pt.to_vector().dot_product(axis);
+            if (dp < proj.min) {
+               proj.min = dp;
+            } else if (dp > proj.max) {
+               proj.max = dp;
+            }
+         }
+
+         return proj;
+      }
+
+      CollisionResult collide(const Polygon<T>& P, const Vector<T>& relV) {
+         CollisionResult result;
+         result.are_intersecting = true;
+         result.will_intersect = true;
+
+      }
+
+      const vector<Point<T>>& points() const {
+         return pts;
+      }
+
+      vector<Vector<T>> edge_vectors() const {
+
+      }
+
+      vector<Line<T>> edges() const {
+
+      }
+
+      friend ostream& operator<<(ostream& out, const Polygon<T>& P) {
+         ostringstream sb;
+         out << "Polygon{" << P.points.size() << "}("
+             << str::join(P.points, ",") << ")";
+         return out;
+      }
+      
+   private:
+      vector<Point<T>> pts;
+   };
+
+   /**
+    * Divides the given fixed size cartesian plane into subdivisions to
+    * optimize the targets for collision detection.
+    */
+   template<class T, class C>
+   class CollisionTree {
+   public:
+      CollisionTree(const Rect<T>& rect, int level = 0,
+               int maxLevel = 5, int maxObjects = 10)
+         : rect(rect), level(level), maxLevel(maxLevel), maxObjects(maxObjects)
+      { }
+
+      typedef pair<C, Rect<T>> Entry;
+
+      virtual ~CollisionTree()
+      { }
+      
+      void insert(const C& object, const Rect<T>& rect) {
+         insert({object, rect});
+      }
+
+      void clear() {
+         entries.clear();
+         quadrants.clear();
+      }
+      
+      vector<Entry> retrieve(const Rect<T>& objRect) const {
+         vector<Entry> potentials;
+         retrieve_impl(potentials, objRect);
+         return potentials;
+      }
+
+      const Rect<T>& get_rect() const {
+         return rect;
+      }
+
+      vector<const CollisionTree<T, C>*> get_quadrants() const {
+         vector<const CollisionTree<T, C>*> quadPointers;
+         for (int x = 0; x < quadrants.size(); x++) {
+            quadPointers.push_back(&quadrants[x]);
+         }
+         return quadPointers;
+      }
+
+      void debug_split() {
+         split();
+      }
+
+      JSON json() const {
+         JSON json;
+         
+         vector<JSON> quadListJson;
+         for (auto quad : quadrants) {
+            quadListJson.push_back(quad.json());
+         }
+         json.set_object_array("quadrants", quadListJson);
+
+         vector<JSON> entryRectListJson;
+         for (auto entry : entries) {
+            entryRectListJson.push_back(entry.second.json());
+         }
+         json.set_object_array("entries", entryRectListJson);
+         json.set_object("rect", rect.json());
+
+         return json;
+      }
+
+   protected:
+      int get_index(const Rect<T>& objRect) const {
+         int idx = -1;
+
+         for (int x = 0; x < quadrants.size(); x++) {
+            if (quadrants.at(x).rect.contains(objRect)) {
+               idx = x;
+               break;
+            }
+         }
+         
+         return idx;
+      }
+
+      void insert(const Entry& entry) {
+         if (quadrants.size() > 0) {
+            int idx = get_index(entry.second);
+            if (idx != -1) {
+               quadrants.at(idx).insert(entry);
+               return;
+            }
+         }
+
+         entries.push_back(entry);
+         if (entries.size() >= maxObjects && level < maxLevel) {
+            split();   
+         }
+      }
+      
+      void retrieve_impl(vector<Entry>& potentials, const Rect<T>& objRect) const {
+         int idx = get_index(objRect);
+         if (idx != -1 && quadrants.size() > 0) {
+            quadrants.at(idx).retrieve_impl(potentials, objRect);
+         }
+         
+         potentials.insert(potentials.end(), entries.begin(), entries.end());
+      }
+
+      void split() {
+         if (quadrants.size() > 0) {
+            return;
+         }
+
+         vector<Rect<T>> subRects = rect.split();
+         for (auto subRect : subRects) {
+            quadrants.push_back(CollisionTree(subRect, level + 1, maxLevel, maxObjects));
+         }
+
+         vector<Entry> savedEntries = entries;
+         entries.clear();
+
+         for (auto entry : savedEntries) {
+            insert(entry);
+         }
+      }
+
+   private:
+      int level;
+      int maxLevel;
+      int maxObjects;
+      Rect<T> rect;
+      vector<Entry> entries;
+      vector<CollisionTree<T, C>> quadrants;
+   }; 
 }
 

@@ -5,7 +5,7 @@
  * Date: Monday, Feb 2 2015
  */
 #pragma once
-#include "lain/settings.h"
+#include "lain/json.h"
 #include "lost_levels/graphics.h"
 #include "lost_levels/resource_base.h"
 #include "apathy/path.hpp"
@@ -47,7 +47,7 @@ namespace lost_levels {
        */
       void load_file(const string& filename) {
          try {
-            Settings settings = Settings::load_from_file(filename);
+            JSON settings = JSON::load_from_file(filename);
             fs::Path base = fs::Path(filename).parent();
 
             if (settings.contains("images")) {
@@ -93,28 +93,28 @@ namespace lost_levels {
       }
 
       void load_image_object_array(const fs::Path& base,
-                                   const vector<Settings>& obj_array) {
+                                   const vector<JSON>& obj_array) {
 
-         for (Settings obj : obj_array) {
+         for (JSON obj : obj_array) {
             load_image_object(base, obj);
          }
       }
 
       void load_image_object(const fs::Path& baseIn,
-                             const Settings& object) {
+                             const JSON& object) {
          fs::Path base = baseIn;
          fs::Path imagePath = base.relative(object.get<string>("file"));
          shared_ptr<Image> image = imageLoader->load_image(imagePath.string());
          put(object.get<string>("name"), image);
       }
 
-      void load_animation_object_array(const vector<Settings>& obj_array) {
-         for (Settings obj : obj_array) {
+      void load_animation_object_array(const vector<JSON>& obj_array) {
+         for (JSON obj : obj_array) {
             load_animation_object(obj);
          }
       }
 
-      void load_animation_object(const Settings& anim_entry) {
+      void load_animation_object(const JSON& anim_entry) {
          Size<int> sz;
          string name = anim_entry.get<string>("name");
 

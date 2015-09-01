@@ -6,7 +6,7 @@
  */
 #pragma once
 #include "lain/exception.h"
-#include "lain/settings.h"
+#include "lain/json.h"
 #include "lost_levels/geometry.h"
 #include "lost_levels/timer.h"
 #include "lost_levels/resource_base.h"
@@ -278,6 +278,9 @@ namespace lost_levels {
 
       virtual Size<int> get_logical_size() const = 0;
       virtual void set_logical_size(const Size<int>& sz) = 0;
+      
+      virtual void draw_rect(const Rect<int>& rect) = 0;
+      virtual void fill_rect(const Rect<int>& rect) = 0;
 
       virtual void render(shared_ptr<const Image> image,
             const Rect<int>& srcRect,
@@ -307,7 +310,94 @@ namespace lost_levels {
          render(image, Rect<int>(Point<int>(0, 0), image->get_size()),
                dstRect);
       }
+      
+      virtual void render_pattern(shared_ptr<const lost_levels::Image> image,
+            const Point<int>& scrollPos,
+            const Rect<int>& srcRect,
+            const Rect<int>& dstRect) {
+         Point<int> relativePos = dstRect.pt + scrollPos.to_vector();
+         relativePos.x %= srcRect.sz.width;
+         relativePos.y %= srcRect.sz.height;
 
+         if (relativePos.x > 0) {
+            relativePos -= srcRect.sz.x_vector();
+         }
+         if (relativePos.y > 0) {
+            relativePos -= srcRect.sz.y_vector();
+         }
+         
+         Point<int> terminalPoint =
+            dstRect.pt + dstRect.sz.xy_vector() + srcRect.sz.xy_vector();
+
+         for (int y = relativePos.y;
+              y < terminalPoint.y;
+              y += srcRect.sz.height) {
+            for (int x = relativePos.x;
+                 x < terminalPoint.x;
+                 x += srcRect.sz.width) {
+               Rect<int> srcClipRect = srcRect;
+               Rect<int> dstClipRect = Rect<int>(Point<int>(x, y), srcRect.sz);
+               
+               if (dstClipRect.pt.x < dstRect.pt.x) {
+                  int xdiff = dstRect.pt.x - dstClipRect.pt.x;
+                  srcClipRect.pt.x += xdiff;
+                  srcClipRect.sz.width -= xdiff;
+                  dstClipRect.pt.x = dstRect.pt.x;
+                  dstClipRect.sz.width -= xdiff;
+               }
+
+               if (dstClipRect.pt.x + srcClipRect.sz.width > dstRect.pt.x + dstRect.sz.width) {
+                  int xdiff = (dstClipRect.pt.x + srcClipRect.sz.width) - (dstRect.pt.x + dstRect.sz.width);
+                  dstClipRect.sz.width -= xdiff;
+                  srcClipRect.sz.width -= xdiff;
+               }
+
+               if (dstClipRect.pt.y < dstRect.pt.y) {
+                  int ydiff = dstRect.pt.y - dstClipRect.pt.y;
+                  srcClipRect.pt.y += ydiff;
+                  srcClipRect.sz.height -= ydiff;
+                  dstClipRect.pt.y = dstRect.pt.y;
+                  dstClipRect.sz.height -= ydiff;
+               }
+
+               if (dstClipRect.pt.y + srcClipRect.sz.height > dstRect.pt.y + dstRect.sz.height) {
+                  int ydiff = (dstClipRect.pt.y + srcClipRect.sz.height) - (dstRect.pt.y + dstRect.sz.height);
+                  dstClipRect.sz.height -= ydiff;
+                  srcClipRect.sz.height -= ydiff;
+               }
+
+               /*
+               if (dstClipRect.pt.x < dstRect.pt.x) {
+                  srcClipRect.pt.x = srcRect.pt.x + (dstRect.pt.x - dstClipRect.pt.x);
+                  srcClipRect.sz.width = srcRect.sz.width - (dstRect.pt.x - dstClipRect.pt.x);
+                  dstClipRect.pt.x = dstRect.pt.x;
+                  dstClipRect.sz.width = srcClipRect.sz.width;
+               }
+
+               if (dstClipRect.pt.x + dstClipRect.sz.width > dstRect.pt.x + dstRect.sz.width) {
+                  dstClipRect.sz.width -= (dstRect.pt.x + dstRect.sz.width) - (dstClipRect.pt.x + dstClipRect.sz.width);
+                  srcClipRect.sz.width = dstClipRect.sz.width;
+               }
+
+               if (dstClipRect.pt.y < dstRect.pt.y) {
+                  srcClipRect.pt.y = srcRect.pt.y + (dstRect.pt.y - dstClipRect.pt.y);
+                  srcClipRect.sz.height = srcRect.sz.height - (dstRect.pt.y - dstClipRect.pt.y);
+                  dstClipRect.pt.y = dstRect.pt.y;
+                  dstClipRect.sz.height = srcClipRect.sz.height;
+               }
+
+               if (dstClipRect.pt.y + dstClipRect.sz.height > dstRect.pt.y + dstRect.sz.height) {
+                  dstClipRect.sz.height -= (dstRect.pt.y + dstRect.sz.height) - (dstClipRect.pt.y + dstClipRect.sz.height);
+                  srcClipRect.sz.height = dstClipRect.sz.height;
+               }
+               */
+
+               render(image, srcClipRect, dstClipRect);
+            }
+         }
+      }
+
+      /*
       virtual void render_pattern(shared_ptr<const lost_levels::Image> image,
             const Point<int>& scrollPos,
             const Rect<int>& srcRect,
@@ -330,14 +420,23 @@ namespace lost_levels {
 
          set_clip_rect(dstRect);
 
-         for (int y = relativePos.y; y < terminalPoint.y; y += srcRect.sz.height) {
-            for (int x = relativePos.x; x < terminalPoint.x; x += srcRect.sz.width) {
+         for (int y = relativePos.y; y < terminalPoint.y + srcRect.sz.height; y += srcRect.sz.height) {
+            for (int x = relativePos.x; x < terminalPoint.x + srcRect.sz.width; x += srcRect.sz.width) {
                render(image, srcRect, Rect<int>(Point<int>(x, y), srcRect.sz));
+               // LRS-DEBUG: remove this!
+               set_draw_color(Color(255, 255, 255));
+               draw_rect(Rect<int>(Point<int>(x, y), srcRect.sz));
             }
          }
 
          clear_clip_rect();
+
+         // LRS-DEBUG: remove this!
+         set_draw_color(Color(0, 255, 0));
+         draw_rect(dstRect);
+         set_draw_color(Color(0, 0, 0));
       }
+      */
 
       virtual void render_pattern(shared_ptr<const lost_levels::Image> image,
             const Point<int>& scrollPos,

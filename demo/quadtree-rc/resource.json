@@ -1,0 +1,17 @@
+{
+   "images": [
+      {"name": "question-block", "file": "question-block.png"},
+      {"name": "seattle", "file": "seattle.png"},
+      {"name": "stars", "file": "stars.png"},
+      {"name": "font", "file": "Apple2e.png"}
+   ],
+   "animations": [
+      {"name": "question-block", "image": "question-block",
+       "loop": true, "width": 16, "height": 16,
+       "frames": ["0,15", "1,15", "2,15", "1,15"]},
+      {"name": "stars", "image": "stars",
+       "loop": true, "width": 512, "height": 178,
+       "frames": ["0,15", "1,15", "2,15", "3,15",
+                  "4,15", "5,15", "6,15", "7,15"]}
+   ]
+}

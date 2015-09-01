@@ -106,6 +106,20 @@ int main() {
          assert_true(correctedAvgPhysicsErrorTime < 1.0);
          return true;
       })
+      .test("Timer-003: Test timer accumulator behavior.", [&]()->bool {
+         auto timer = sdl2::create_timer(1000, true);
+         timer->start();
+
+         while (timer->get_frames() < 5) {
+            SDL_Delay(2000);
+            timer->update();
+            cout << ".";
+            cout.flush();
+         }
+         cout << "Timer frames: " << timer->get_frames() << endl;
+         
+         return true; 
+      })
       .run();
 }
 

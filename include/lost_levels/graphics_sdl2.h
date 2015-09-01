@@ -114,6 +114,14 @@ namespace lost_levels {
          void display() override {
             SDL_RenderPresent(renderer);
          }
+         
+         void draw_rect(const Rect<int>& rect) override {
+            SDL_RenderDrawRect(renderer, (SDL_Rect*)&rect);
+         }
+
+         void fill_rect(const Rect<int>& rect) override {
+            SDL_RenderFillRect(renderer, (SDL_Rect*)&rect);
+         }
 
          void render(shared_ptr<const lost_levels::Image> imageIn,
                const Rect<int>& src,
@@ -205,6 +213,7 @@ namespace lost_levels {
                            SDL_RENDERER_PRESENTVSYNC) {
 
          SDL_Renderer* renderer;
+         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
          shared_ptr<Window> window = dynamic_pointer_cast<Window>(windowIn);
          if (window == nullptr) {
             throw GraphicsException("sdl2::Renderer requires an sdl2::Window.");

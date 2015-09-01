@@ -9,54 +9,59 @@
 #include "lain/string.h"
 #include "tinyformat/tinyformat.h"
 
-#include <vector>
+#include "lost_levels/geometry.h"
+#include "lost_levels/graphics.h"
 
 namespace lost_levels {
    using namespace std;
    using namespace lain;
 
+   class LevelDataException : public Exception {
+   public:
+      using Exception::Exception;
+   };
+
    class BlockData {
    public:
-      BlockData(int blocksetId, int blockId) :
-         set(blocksetId), id(blockId) { }
-
-      static BlockData parse(const string& blockDataExpr) {
-         vector<string> tuple;
-         str::split(tuple, blockDataExpr, ",");
-
-         if (tuple.size() != 2) {
-            throw ResourceException(tfm::format(
-                     "Invalid BlockData expression: '%s'", blockDataExpr));
-         }
-
-         try {
-            return BlockData(stoi(tuple[0]), stoi(tuple[1]));
-
-         } catch (const invalid_argument& e) {
-            throw ResourceException(tfm::format(
-                     "Invalid BlockData expression (non-numeric): '%s'", blockDataExpr));
-         }
-      }
-
-      string to_string() const {
-         return tfm::format("%d,%d", set, id);
-      }
-
-      int set;
+      BlockData(const string& name, int id) :
+         name(name), id(id) { }
+      
+      string name;
       int id;
    };
 
-   class LevelData : public ResourceImpl<Resource::Type::LEVEL_DATA> {
+   class BlockDataSet {
    public:
-      LevelData(vector<BlockData> blocks, Size<int> levelSize) :
-         blocks(blocks), levelSize(levelSize) {
+      BlockDataSet(const vector<BlockData>& blocks) {
+         for (BlockData block : blocks) {
+            blockMap[block.id] = block;
+         }
+      }
 
+      inline const BlockData& get_block(int id) const {
+         auto iter = blockMap.find(id);
+         if (iter == blockMap.cend()) {
+            throw LevelDataException(tfm::format("id not found in BlockDataSet: %d", id));
+         }
+         return iter->second;
+      }
+      
+   private:
+      map<int, BlockData> blockMap;
+   };
+
+   class BlockMap : public ResourceImpl<Resource::Type::BLOCK_MAP> {
+   public:
+      BlockMap(vector<BlockData> blocks, Size<int> levelSize) :
+         blocks(blocks), levelSize(levelSize) {
          assert(levelSize.width * levelSize.height == blocks.size());
       }
 
       const BlockData& get_block(Point<int> pt) {
+         assert(pt.x < levelSize.width);
+         assert(pt.y < levelSize.height);
+
          size_t offset = pt.y * levelSize.width + pt.x;
-         assert(offset >= blocks.size());
          return blocks[offset];
       }
 
@@ -68,5 +73,4 @@ namespace lost_levels {
       vector<BlockData> blocks;
       Size<int> levelSize;
    };
-
 }
