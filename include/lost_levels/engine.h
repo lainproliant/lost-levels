@@ -9,6 +9,7 @@
 #include <stack>
 
 #include "lain/exception.h"
+#include "lain/util.h"
 #include "lost_levels/timer.h"
 #include "lost_levels/graphics.h"
 #include "lost_levels/resources.h"
@@ -46,12 +47,11 @@ namespace lost_levels {
     * - Push other states from within this state, and pop them to end
     *   the current state.  Emptying the engine's state stack will end
     *   the program.
-    *   - In MyState:
     *
+    *   - In MyState:
     *       engine.push_state<OtherState>(param1);
     *
     *   - In OtherState:
-    *
     *       engine.pop_state(); // Return to MyState
     */
    class State {
@@ -110,24 +110,26 @@ namespace lost_levels {
     *
     *       // 100FPS no frame skip.
     *       set_physics_timer(sdl2::create_timer(1000 / 10), true);
+    *
     *       // 60FPS frame skip (with recovery)
     *       set_graphics_timer(sdl2::create_timer(1000 / 60));
     *
-    *    - Optionally initialize any other settings, such as the renderer's
-    *      logical size, default draw color, or load data into a
-    *      ResourceManager instance.
+    *    - Optionally initialize any other settings, such as the
+    *      renderer's logical size, default draw color, or load data
+    *      into a ResourceManager instance.
     *
-    *    - Push your initial state onto the stack.  This is performed via a
-    *      template function push_state<T>().  Put the name of your state
-    *      class in place of T, and pass any constructor parameters for the
-    *      class to push_state.  The first parameter to your State class
-    *      constructor must be a non-const reference to Engine.
+    *    - Push your initial state onto the stack.  This is performed via
+    *      a template function push_state<T>().  Put the name of your
+    *      state class in place of T, and pass any constructor parameters
+    *      for the class to push_state.  The first parameter to your
+    *      State class constructor must be a non-const reference to
+    *      Engine.
     *
-    *       class AnimalState : public State {
-    *          AnimalState(Engine& engine, const string& animalName) ...
-    *       };
-    *
-    *       push_state<AnimalState>("Puppy");
+    *      class AnimalState : public State {
+    *         AnimalState(Engine& engine, const string& animalName) ...
+    *      };
+    *  
+    *      push_state<AnimalState>("Puppy");
     */
    class Engine {
    public:
@@ -182,11 +184,11 @@ namespace lost_levels {
          try {
             initialize();
 
-            require(graphicsTimer != nullptr, "graphics timer");
-            require(physicsTimer != nullptr, "physics timer");
-            require(window != nullptr, "window");
-            require(renderer != nullptr, "renderer");
-            require(! states.empty(), "initial state");
+            util::require(graphicsTimer, "Graphics timer is required, call set_physics_timer() in your initialize() method");
+            util::require(physicsTimer, "Physics timer is required, call set_physics_timer() in your initialize() method");
+            util::require(window, "Window is required, call set_window() in your initialize() method");
+            util::require(renderer, "Renderer is required, call set_renderer() in your initialize() method");
+            util::assertTrue(! states.empty(), "Initial state is required, call put_state() in your initialize() method");
 
             graphicsTimer->start();
             physicsTimer->start();
@@ -386,13 +388,6 @@ namespace lost_levels {
        *    }
        */
       virtual void delay() { }
-
-      void require(bool expr, const string& item) {
-         if (! expr) {
-            throw EngineException(tfm::format(
-               "No %s was provided.", item));
-         }
-      }
 
    private:
       static void signal_callback(int signal) {

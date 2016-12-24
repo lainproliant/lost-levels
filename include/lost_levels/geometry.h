@@ -14,7 +14,9 @@
 #include <set>
 #include <vector>
 
-#include "lain/json.h"
+#include "lain/algorithms.h"
+#include "lain/settings.h"
+#include "lain/util.h"
 
 namespace lost_levels {
    using namespace std;
@@ -25,11 +27,6 @@ namespace lost_levels {
    
    template<class T>
    class Polygon;
-
-   class GeometryException : public Exception {
-   public:
-      using Exception::Exception;
-   };
 
    /**
     * Determine if the two floats provided are equal within the given
@@ -46,17 +43,26 @@ namespace lost_levels {
    inline bool epsilon_equal(double a, double b, double epsilon = DBL_EPSILON) {
       return (abs(a - b) < epsilon);
    }
-
+   
+   /**
+    * Overload of geometric_equal for non-double types.
+    */
    template<class T>
    inline bool geometric_equal(const T& a, const T& b) {
       return a == b;
    }
-
+   
+   /**
+    * Overload of geometric_equal for double type using epsilon_equal.
+    */
    template<>
    inline bool geometric_equal<double>(const double& a, const double& b) {
       return epsilon_equal(a, b);
    }
 
+   /**
+    * Overload of geometric_equal for float type using epsilon_equal.
+    */
    template<>
    inline bool geometric_equal<float>(const float& a, const float& b) {
       return epsilon_equal(a, b);
@@ -72,9 +78,15 @@ namespace lost_levels {
     */
    template <class T>
    class Vector { public:
+      /**
+       * Creates an initial vector with 0 magnitude.
+       */
       Vector() :
          vx(0), vy(0) { }
-
+   
+      /**
+       * Creates an initial vector with the given x and y components.
+       */
       Vector(T vx, T vy) :
          vx(vx), vy(vy) { }
 
@@ -122,49 +134,81 @@ namespace lost_levels {
       Vector<int> round() const {
          return Vector<int>(std::round(vx), std::round(vy));
       }
-
+   
+      /**
+       * Compare two vectors to determine if they are geometrically equal.
+       */
       bool operator==(const Vector<T>& rhs) const {
          return geometric_equal(vx, rhs.vx) &&
                 geometric_equal(vy, rhs.vy);
       }
-
+      
+      /**
+       * Compare two vectors to determine if they are not geometrically equal.
+       */
       bool operator!=(const Vector<T>& rhs) const {
          return ! this->operator==(rhs);
       }
-
+      
+      /**
+       * Add the components of one vector to another, e.g. adding acceleration
+       * to velocity vectors or adding velocity to a displacement vector.
+       */
       Vector<T> operator+=(const Vector<T>& rhs) {
          (*this) = (*this) + rhs;
          return (*this);
       }
-
+   
+      /**
+       * Subtract the components of one vector from another.
+       */
       Vector<T> operator-=(const Vector<T>& rhs) {
          (*this) = (*this) - rhs;
          return (*this);
       }
-
-      JSON json() const {
-         JSON json;
+   
+      /**
+       * Convert the vector to a Settings object for printing.
+       */
+      Settings json() const {
+         Settings json;
          json.set<T>("vx", vx);
          json.set<T>("vy", vy);
+         return json;
       }
-
+   
+      /**
+       * Add two vectors together.
+       */
       friend Vector<T> operator+(const Vector<T>& A, const Vector<T>& B) {
          return Vector<T>(A.vx + B.vx, A.vy + B.vy);
       }
-
+      
+      /**
+       * Subtract two vectors from each other.
+       */
       friend Vector<T> operator-(const Vector<T>& A, const Vector<T>& B) {
          return Vector<T>(A.vx - B.vx, A.vy - B.vy);
       }
-
+   
+      /**
+       * Multiply a vector by a given scalar constant.
+       */
       friend Vector<T> operator*(const Vector<T>& A, const T& s) {
          return Vector<T>(A.vx * s, A.vy * s);
       }
-
+      
+      /**
+       * Write the vector to the given output stream.
+       */
       friend ostream& operator<<(ostream& out, const Vector<T>& A) {
-         out << "Vector(" << A.vx << "x, " << A.vy << "y)";
+         out << "Vector" << A.json();
          return out;
       }
-
+   
+      /**
+       * The x and y components of the vector.
+       */
       T vx, vy;
    };
 
@@ -177,11 +221,17 @@ namespace lost_levels {
    template <class T>
    class Point {
    public:
-      Point(T x, T y) :
-         x(x), y(y) { }
-
+      /**
+       * Create a point at the origin of a cartesian plane.
+       */
       Point() :
          x(0), y(0) { }
+      
+      /**
+       * Create a point at the given x and y location.
+       */
+      Point(T x, T y) :
+         x(x), y(y) { }
 
       /**
        * Round this point to the nearest integer values for
@@ -191,22 +241,34 @@ namespace lost_levels {
       Point<int> round() const {
          return Point<int>(std::round(x), std::round(y));
       }
-
+      
+      /**
+       * Compare two points to determine if they are geometrically equal.
+       */
       bool operator==(const Point<T>& rhs) const {
          return geometric_equal(x, rhs.x) &&
                 geometric_equal(y, rhs.y);
       }
-
+      
+      /**
+       * Compare two points to determine if they are not geometrically equal.
+       */
       bool operator!=(const Point<T>& rhs) const {
          return ! this->operator==(rhs);
       }
-
+      
+      /**
+       * Add the given vector components to this point.
+       */
       Point<T>& operator+=(const Vector<T>& A) {
          x += A.vx;
          y += A.vy;
          return *this;
       }
-
+      
+      /**
+       * Subtract the given vector components from this point.
+       */
       Point<T>& operator-=(const Vector<T>& A) {
          x -= A.vx;
          y -= A.vy;
@@ -220,9 +282,12 @@ namespace lost_levels {
       Vector<T> to_vector() const {
          return Vector<T>(x, y);
       }
-
-      JSON json() const {
-         JSON json;
+      
+      /**
+       * Convert the point to a Settings object for printing.
+       */
+      Settings json() const {
+         Settings json;
          json.set<T>("x", x);
          json.set<T>("y", y);
          return json;
@@ -234,20 +299,33 @@ namespace lost_levels {
       friend Vector<T> operator-(const Point<T>& p1, const Point<T>& p2) {
          return Vector<T>(p2.x - p1.x, p2.y - p1.y);
       }
-
+      
+      /**
+       * Add the given vector components to a point.
+       */
       friend Point<T> operator+(Point<T> p, const Vector<T>& A) {
          return p += A;
       }
-
+      
+      /**
+       * Subtract the given vector components from a point.
+       */
       friend Point<T> operator-(Point<T> p, const Vector<T>& A) {
          return p -= A;
       }
-
+      
+      /**
+       * Write the point to the given output stream.
+       */
       friend ostream& operator<<(ostream& out, const Point<T>& p) {
-         out << "Point(" << p.x << "x, " << p.y << "y)";
+         out << "Point" << p.json();
          return out;
       }
-
+      
+      /**
+       * The x and y displacement values from the cartesian origin
+       * for this point.
+       */
       T x, y;
    };
 
@@ -259,19 +337,36 @@ namespace lost_levels {
    template<class T>
    class Line {
    public:
+      /**
+       * Creates a 0-length line with both points at the origin.
+       */
       Line() :
          a(Point<T>()), b(Point<T>()) { }
-
+   
+      /**
+       * Contains a line between the two given points.
+       */
       Line(const Point<T>& a, const Point<T>& b) :
          a(a), b(b) { }
-
+      
+      /**
+       * Contains a line between the two given points identified by
+       * the given x and y displacement values for each point.
+       */
       Line(const T& ax, const T& ay, const T& bx, const T& by) :
          a(Point<T>(ax, ay)), b(Point<T>(bx, by)) { }
-
+   
+      /**
+       * Determine if the two lines are geometrically equal, meaning
+       * that they overlap.
+       */
       bool operator==(const Line<T>& rhs) const {
          return a == rhs.a && b == rhs.b;
       }
-
+      
+      /**
+       * Detemrine if the two lines are not geometrically equal.
+       */
       bool operator!=(const Line<T>& rhs) const {
          return ! this->operator==(rhs);
       }
@@ -354,16 +449,19 @@ namespace lost_levels {
       Vector<T> to_vector() const {
          return Vector<T>(b.x - a.x, b.y - a.y);
       }
-
-      JSON json() const {
-         JSON json;
+      
+      /**
+       * Convert the line to a Settings object for printing.
+       */
+      Settings json() const {
+         Settings json;
          json.set_object("a", a.json());
          json.set_object("b", b.json());
          return json;
       }
 
       friend ostream& operator<<(ostream& out, const Line<T>& L) {
-         out << "Line(" << L.a << ", " << L.b << ")";
+         out << "Line" << L.json();
          return out;
       }
 
@@ -431,15 +529,15 @@ namespace lost_levels {
          return Rect<T>(Point<T>(), *this);
       }
       
-      JSON json() const {
-         JSON json;
+      Settings json() const {
+         Settings json;
          json.set<T>("width", width);
          json.set<T>("height", height);
          return json;
       }
 
       friend ostream& operator<<(ostream& out, const Size<T>& sz) {
-         out << "Size(" << sz.width << " x " << sz.height << ")";
+         out << "Size" << sz.json();
          return out;
       }
 
@@ -506,34 +604,6 @@ namespace lost_levels {
          */
       }
       
-      /**
-       * Determine the direction of collision if two rectangles
-       * overlap by calculating the Minowski sum of the two
-       * rectangles.  If the rectangles do not overlap,
-       * RectSide.NONE is returned (check for it!)
-       */
-      RectSide collide_minowski(const Rect<T>& R2) const {
-         Point<T> centerA = center(),
-                  centerB = R2.center();
-         float w  = (sz.width + R2.sz.width) / ((T) 2),
-               h  = (sz.height + R2.sz.height) / ((T) 2),
-               dx = centerA.x - centerB.x,
-               dy = centerA.y - centerB.y;
-
-         if (abs(dx) <= w && abs(dy) <= h) {
-            float wy = w * dy;
-            float hx = h * dx;
-            
-            if (wy > hx) {
-               return wy > -hx ? TOP : LEFT;
-            } else {
-               return wy > -hx ? RIGHT : BOTTOM;
-            }
-         } else {
-            return NONE;
-         }
-      }
-
       /**
        * Determine if a particular point is contained within this
        * rectangle.
@@ -686,17 +756,33 @@ namespace lost_levels {
       Rect<T> tile_rect(const Size<T>& szTile, int tileNum) const {
          return Rect<T>(tile_point(szTile, tileNum), szTile);
       }
-
+      
+      /**
+       * Create a Polygon with the same dimensions as this rectangle.
+       */
+      Polygon<T> to_polygon() const {
+         return Polygon<T>(corners());
+      }
+      
+      /**
+       * Determine if two rectangles are geometrically equal.
+       */
       bool operator==(const Rect<T>& rhs) const {
          return pt == rhs.pt && sz == rhs.sz;
       }
-
+      
+      /**
+       * Detemrine if two rectangles are not geometrically equal.
+       */
       bool operator!=(const Rect<T>& rhs) const {
          return ! this->operator==(rhs);
       }
-
-      JSON json() const {
-         JSON json;
+      
+      /**
+       * Convert this rectangle to a Settings object for printing.
+       */
+      Settings json() const {
+         Settings json;
          json.set_object("pt", pt.json());
          json.set_object("sz", sz.json());
          return json;
@@ -741,227 +827,108 @@ namespace lost_levels {
 
          return minimum_bound(points);
       }
-
+      
+      /**
+       * Write the rectangle to the given output stream.
+       */
       friend ostream& operator<<(ostream& out, const Rect<T>& R) {
-         out << "Rect(" << R.pt << ", " << R.sz << ")";
+         out << "Rect" << R.json();
          return out;
       }
-
+      
+      /**
+       * The top left point of the rectangle, indicates its position.
+       */
       Point<T> pt;
+
+      /**
+       * The width and height of the rectangle.
+       */
       Size<T> sz;
    };
-
+   
+   /**
+    * Represents a shape composed of three or more points.
+    */
    template<class T>
    class Polygon {
    public:
-      class Projection {
-      public:
-         Projection(double min, double max) :
-            min(min), max(max)
-         { }
-
-         friend double operator-(const Projection& projA, const Projection& projB) {
-            if (projA.min < projB.min) {
-               return projB.min - projA.max;
-            } else {
-               return projA.min - projB.max;
-            }
-         }
-
-         double min, max;
-      };
-
-      class CollisionResult {
-      public:
-         bool will_intersect;
-         bool are_intersecting;
-         Vector<T> min_trans_v;
-      };
-
+      /**
+       * Create a polygon connecting the given points in order.
+       */
       Polygon(const vector<Point<T>>& points) :
          pts(points)
-      { }
+      {
+         util::assertTrue(points.size() >= 3, "Polygon must have at least three points");
+      }
       
       /**
-       * Project the polygon across the given axis, reporting back the
-       * min and max coordinates relative to the projection axis.
+       * Get the polygon's constituent points in order.
        */
-      Projection project(const Vector<T>& axis) {
-         float dp = axis.dot_product(pts[0].to_vector());
-         Projection proj(dp, dp);
-
-         for (auto pt : pts) {
-            dp = pt.to_vector().dot_product(axis);
-            if (dp < proj.min) {
-               proj.min = dp;
-            } else if (dp > proj.max) {
-               proj.max = dp;
-            }
-         }
-
-         return proj;
-      }
-
-      CollisionResult collide(const Polygon<T>& P, const Vector<T>& relV) {
-         CollisionResult result;
-         result.are_intersecting = true;
-         result.will_intersect = true;
-
-      }
-
       const vector<Point<T>>& points() const {
          return pts;
       }
+      
+      /**
+       * Get the edges (faces, sides) of the polygon in order
+       * based on the order of the points.
+       */
+      const vector<Line<T>> edges() const {
+         vector<Line<T>> edges;
 
+         for (int x = 0; x < pts.size(); x++) {
+            if (x < pts.size() - 1) {
+               edges.push_back(Line<T>(pts[x], pts[x + 1]));
+            } else {
+               edges.push_back(Line<T>(pts[x], pts[0]));
+            }
+         }
+
+         return edges;
+      }
+   
+      /**
+       * Get the edge vectors for the polygon in order.
+       */
       vector<Vector<T>> edge_vectors() const {
-
+         return alg::map(edges(), [](auto&& line) { return line.to_vector(); });
       }
-
-      vector<Line<T>> edges() const {
-
+      
+      /**
+       * Get the normals of the edge vectors in order.
+       */
+      vector<Vector<T>> edge_normals() const {
+         return alg::map(edge_vectors(), [](auto&& vec) {
+            return Vector<T>(vec.vx, -vec.ty).normalize();
+         });
       }
-
+      
+      /**
+       * Convert the polygon to a Settings object for printing.
+       */
+      Settings json() const {
+         Settings json;
+         json.set<T>("points", pts.size());
+         json.set_object_array(alg::map(pts, [](auto&& pt) {
+            return pt.json();
+         }));
+         return json;
+      }
+      
+      /**
+       * Write the polygon to the given output stream.
+       */
       friend ostream& operator<<(ostream& out, const Polygon<T>& P) {
          ostringstream sb;
-         out << "Polygon{" << P.points.size() << "}("
-             << str::join(P.points, ",") << ")";
+         out << "Polygon" << P.json();
          return out;
       }
       
    private:
+      /**
+       * The constituent points of the polygon in order.
+       */
       vector<Point<T>> pts;
    };
-
-   /**
-    * Divides the given fixed size cartesian plane into subdivisions to
-    * optimize the targets for collision detection.
-    */
-   template<class T, class C>
-   class CollisionTree {
-   public:
-      CollisionTree(const Rect<T>& rect, int level = 0,
-               int maxLevel = 5, int maxObjects = 10)
-         : rect(rect), level(level), maxLevel(maxLevel), maxObjects(maxObjects)
-      { }
-
-      typedef pair<C, Rect<T>> Entry;
-
-      virtual ~CollisionTree()
-      { }
-      
-      void insert(const C& object, const Rect<T>& rect) {
-         insert({object, rect});
-      }
-
-      void clear() {
-         entries.clear();
-         quadrants.clear();
-      }
-      
-      vector<Entry> retrieve(const Rect<T>& objRect) const {
-         vector<Entry> potentials;
-         retrieve_impl(potentials, objRect);
-         return potentials;
-      }
-
-      const Rect<T>& get_rect() const {
-         return rect;
-      }
-
-      vector<const CollisionTree<T, C>*> get_quadrants() const {
-         vector<const CollisionTree<T, C>*> quadPointers;
-         for (int x = 0; x < quadrants.size(); x++) {
-            quadPointers.push_back(&quadrants[x]);
-         }
-         return quadPointers;
-      }
-
-      void debug_split() {
-         split();
-      }
-
-      JSON json() const {
-         JSON json;
-         
-         vector<JSON> quadListJson;
-         for (auto quad : quadrants) {
-            quadListJson.push_back(quad.json());
-         }
-         json.set_object_array("quadrants", quadListJson);
-
-         vector<JSON> entryRectListJson;
-         for (auto entry : entries) {
-            entryRectListJson.push_back(entry.second.json());
-         }
-         json.set_object_array("entries", entryRectListJson);
-         json.set_object("rect", rect.json());
-
-         return json;
-      }
-
-   protected:
-      int get_index(const Rect<T>& objRect) const {
-         int idx = -1;
-
-         for (int x = 0; x < quadrants.size(); x++) {
-            if (quadrants.at(x).rect.contains(objRect)) {
-               idx = x;
-               break;
-            }
-         }
-         
-         return idx;
-      }
-
-      void insert(const Entry& entry) {
-         if (quadrants.size() > 0) {
-            int idx = get_index(entry.second);
-            if (idx != -1) {
-               quadrants.at(idx).insert(entry);
-               return;
-            }
-         }
-
-         entries.push_back(entry);
-         if (entries.size() >= maxObjects && level < maxLevel) {
-            split();   
-         }
-      }
-      
-      void retrieve_impl(vector<Entry>& potentials, const Rect<T>& objRect) const {
-         int idx = get_index(objRect);
-         if (idx != -1 && quadrants.size() > 0) {
-            quadrants.at(idx).retrieve_impl(potentials, objRect);
-         }
-         
-         potentials.insert(potentials.end(), entries.begin(), entries.end());
-      }
-
-      void split() {
-         if (quadrants.size() > 0) {
-            return;
-         }
-
-         vector<Rect<T>> subRects = rect.split();
-         for (auto subRect : subRects) {
-            quadrants.push_back(CollisionTree(subRect, level + 1, maxLevel, maxObjects));
-         }
-
-         vector<Entry> savedEntries = entries;
-         entries.clear();
-
-         for (auto entry : savedEntries) {
-            insert(entry);
-         }
-      }
-
-   private:
-      int level;
-      int maxLevel;
-      int maxObjects;
-      Rect<T> rect;
-      vector<Entry> entries;
-      vector<CollisionTree<T, C>> quadrants;
-   }; 
 }
 

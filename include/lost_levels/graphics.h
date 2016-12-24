@@ -6,7 +6,6 @@
  */
 #pragma once
 #include "lain/exception.h"
-#include "lain/json.h"
 #include "lost_levels/geometry.h"
 #include "lost_levels/timer.h"
 #include "lost_levels/resource_base.h"

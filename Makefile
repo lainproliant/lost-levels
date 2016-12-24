@@ -1,5 +1,5 @@
 CXX=clang++
-CXXFLAGS=-g -rdynamic --std=c++11 -DLAIN_ENABLE_STACKTRACE -DLAIN_STACKTRACE_IN_DESCRIPTION -I./toolbox/include -I./include
+CXXFLAGS=-g -rdynamic --std=c++14 -DLAIN_ENABLE_STACKTRACE -DLAIN_STACKTRACE_IN_DESCRIPTION -I./toolbox/include -I./include
 LDFLAGS=-lSDL2 -lSDL2_image
 WX_CXXFLAGS=`wx-config --cxxflags`
 WX_LDFLAGS=`wx-config --libs`

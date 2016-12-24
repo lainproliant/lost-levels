@@ -1,5 +1,6 @@
 #include "lost_levels/diag.h"
 #include "lost_levels/engine.h"
+#include "lost_levels/collision.h"
 #include "lost_levels/graphics_sdl2.h"
 #include "lost_levels/timer_sdl2.h"
 
