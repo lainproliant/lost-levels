@@ -8,6 +8,8 @@
  */
 #pragma once
 #include <memory>
+#include <algorithm>
+#include <functional>
 
 namespace lost_levels {
    using namespace std;
